@@ -8,5 +8,6 @@ namespace SpicyNvader
 {
     internal class Menu
     {
+
     }
 }
