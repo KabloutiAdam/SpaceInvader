@@ -11,6 +11,19 @@ namespace SpicyNvader
         static void Main(string[] args)
         {
 
+            Console.SetWindowSize(70, 50);
+            Console.BufferHeight = 50;
+            Console.BufferWidth = 70;
+
+
+            
+            Menu mainMenu = new Menu();
+
+            mainMenu.MainMenu();
+
+
+
+            Console.ReadLine();
         }
     }
 }
