@@ -5,6 +5,8 @@ VisualStudioVersion = 17.2.32630.192
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpicyNvader", "SpicyNvader\SpicyNvader.csproj", "{C032729C-602D-4A14-BE4A-92C557DC7BDE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpicyNvaderUnitTest", "SpicyNvaderUnitTest\SpicyNvaderUnitTest.csproj", "{9F762F57-41E8-4971-8C03-1E0DFB7A041D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{C032729C-602D-4A14-BE4A-92C557DC7BDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C032729C-602D-4A14-BE4A-92C557DC7BDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C032729C-602D-4A14-BE4A-92C557DC7BDE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F762F57-41E8-4971-8C03-1E0DFB7A041D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F762F57-41E8-4971-8C03-1E0DFB7A041D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F762F57-41E8-4971-8C03-1E0DFB7A041D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F762F57-41E8-4971-8C03-1E0DFB7A041D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

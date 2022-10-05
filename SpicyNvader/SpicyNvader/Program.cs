@@ -21,7 +21,7 @@ namespace SpicyNvader
 
             mainMenu.MainMenu();
 
-
+            
 
             Console.ReadLine();
         }

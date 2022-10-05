@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SpicyNvader
 {
-    internal class Menu
+    public class Menu
     {
         /// <summary>
         /// Default constructor
@@ -56,8 +56,10 @@ namespace SpicyNvader
 
 
 
-        public int CursorPosX = 54;
+        public int CursorPosX = 56;
         public int CursorPosY = 3;
+        public string difficulty = "normal";
+        public bool sound = true;
 
         public void MainMenu()
         {
@@ -69,7 +71,7 @@ namespace SpicyNvader
             switch(arrowPos)
             {
                 case 0:
-                    Console.Clear();
+                    StartGame();
                     break;
                 case 1:
 
@@ -126,7 +128,7 @@ namespace SpicyNvader
                     Console.Write("<---");
                     arrowPos--;
                 }
-                else if(key.Key== ConsoleKey.Enter)
+                else if(key.Key == ConsoleKey.Enter)
                 {
                     return arrowPos;
                 }
@@ -136,9 +138,21 @@ namespace SpicyNvader
             
 
         }
-
-
         
+
+        public void StartGame()
+        {
+            Console.Clear();
+
+            Game game = new Game(difficulty, sound);
+            game.StartGame();
+
+
+        }
+
+
+
+
 
 
     }
