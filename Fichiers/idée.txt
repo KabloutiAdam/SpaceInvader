@@ -1,3 +1,7 @@
 Idée: 
 un ennemi peut drop un bonus: Reset d'un shield, arme meilleure pendant quelques temps 
 Un timer (cf horloge 226A) durant le jeu
+
+Space Defender:
+ennemi = vaisseau qui tir
+defensseur = mechant de base 

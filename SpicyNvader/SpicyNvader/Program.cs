@@ -15,8 +15,8 @@ namespace SpicyNvader
             Console.BufferHeight = 50;
             Console.BufferWidth = 70;
 
+            Console.CursorVisible = false;
 
-            
             Menu mainMenu = new Menu();
 
             mainMenu.MainMenu();

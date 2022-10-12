@@ -13,7 +13,7 @@ namespace SpicyNvader
 
         public Player()
         {
-            this._x = 35;
+            this._x = 30;
             this._y = 49;
 
         }

@@ -19,34 +19,34 @@ namespace SpicyNvader
 
 
         private const string PLAY = @"
-                     ______  __  _________ 
-                 __ / / __ \/ / / / __/ _ \
-                / // / /_/ / /_/ / _// , _/
-                \___/\____/\____/___/_/|_|";
+                             ______  __  _________ 
+                         __ / / __ \/ / / / __/ _ \
+                        / // / /_/ / /_/ / _// , _/
+                        \___/\____/\____/___/_/|_|";
 
         private const string OPTION = @"
-              ____  ___  ______________  _  __
-             / __ \/ _ \/_  __/  _/ __ \/ |/ /
-            / /_/ / ___/ / / _/ // /_/ /    / 
-            \____/_/    /_/ /___/\____/_/|_/  ";
+                      ____  ___  ______________  _  __
+                     / __ \/ _ \/_  __/  _/ __ \/ |/ /
+                    / /_/ / ___/ / / _/ // /_/ /    / 
+                    \____/_/    /_/ /___/\____/_/|_/  ";
 
         private const string HIGHSCORE = @"
-           __ _____________ _______________  ___  ____
-          / // /  _/ ___/ // / __/ ___/ __ \/ _ \/ __/
-         / _  // // (_ / _  /\ \/ /__/ /_/ / , _/ _/  
-        /_//_/___/\___/_//_/___/\___/\____/_/|_/___/  ";
+                   __ _____________ _______________  ___  ____
+                  / // /  _/ ___/ // / __/ ___/ __ \/ _ \/ __/
+                 / _  // // (_ / _  /\ \/ /__/ /_/ / , _/ _/  
+                /_//_/___/\___/_//_/___/\___/\____/_/|_/___/  ";
 
         private const string APROPOS = @"
-           ___     ___  ___  ____  ___  ____  ____
-          / _ |   / _ \/ _ \/ __ \/ _ \/ __ \/ __/
-         / __ |  / ___/ , _/ /_/ / ___/ /_/ /\ \  
-        /_/ |_| /_/  /_/|_|\____/_/   \____/___/  ";
+                   ___     ___  ___  ____  ___  ____  ____
+                  / _ |   / _ \/ _ \/ __ \/ _ \/ __ \/ __/
+                 / __ |  / ___/ , _/ /_/ / ___/ /_/ /\ \  
+                /_/ |_| /_/  /_/|_|\____/_/   \____/___/  ";
 
         private const string EXIT = @"
-                   _____  ____________
-                  / __/ |/_/  _/_  __/
-                 / _/_>  <_/ /  / /   
-                /___/_/|_/___/ /_/    ";
+                           _____  ____________
+                          / __/ |/_/  _/_  __/
+                         / _/_>  <_/ /  / /   
+                        /___/_/|_/___/ /_/    ";
 
         private const string ARROW = @"     
               __              
@@ -56,10 +56,10 @@ namespace SpicyNvader
 
 
 
-        public int CursorPosX = 56;
+        public int CursorPosX = 64;
         public int CursorPosY = 3;
-        public string difficulty = "normal";
-        public bool sound = true;
+        public string difficulty = "normal"; // difficulty dépendra du choix dans les options 
+        public bool sound = false; // "
 
         public void MainMenu()
         {
@@ -143,6 +143,12 @@ namespace SpicyNvader
         public void StartGame()
         {
             Console.Clear();
+
+            Console.SetWindowSize(130, 50);
+            Console.BufferHeight = 50;
+            Console.BufferWidth = 130;
+
+            Console.CursorVisible = false;
 
             Game game = new Game(difficulty, sound);
             game.StartGame();
