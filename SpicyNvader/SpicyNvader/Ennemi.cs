@@ -90,32 +90,31 @@ namespace SpicyNvader
 
 
 
-        public void DisplayEnnemi(int x, int y)
+        public void DisplayEnnemi()
         {
             
-            
-            for (int i = 0; i < _ennemi.Length; i++)
+            if(_alive)
             {
-                Console.SetCursorPosition(x, y + i);
-                Console.Write(_ennemi[i]);
+                for (int i = 0; i < _ennemi.Length; i++)
+                {
+                    Console.SetCursorPosition(_xPose, _yPose + i);
+                    Console.Write(_ennemi[i]);
+                }
+
+
+
+               
             }
             
-         
-            
-            for (int i = 0; i < _ennemi.Length; i++)
-            {
-                Console.SetCursorPosition(x, y + i);
-                Console.Write(_ennemi[i]);
-            }
             
             
         }
 
-        public void EreaseEnnemi(int x, int y)
+        public void EreaseEnnemi()
         {
             for (int i = 0; i < _void.Length; i++)
             {
-                Console.SetCursorPosition(x, y + i );
+                Console.SetCursorPosition(_xPose, _yPose + i );
                 Console.Write(_void[i]);
             }
         }

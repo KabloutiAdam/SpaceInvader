@@ -74,7 +74,7 @@ namespace SpicyNvader
                     StartGame();
                     break;
                 case 1:
-
+                    Console.Clear();
                     break;
                 case 2:
 

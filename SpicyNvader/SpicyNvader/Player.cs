@@ -9,6 +9,7 @@ namespace SpicyNvader
     internal class Player
     {
         private int _x, _y;
+        private int _recoil = 0;
         private int _speed = 1;
 
         public Player()
@@ -36,8 +37,12 @@ namespace SpicyNvader
             get { return this._speed; }
             set { this._speed = value; }
         }
+        public int Recoil
+        {
+            get { return this._recoil; }
+            set { this._recoil = value; }
+        }
 
 
-        
     }
 }

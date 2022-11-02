@@ -23,6 +23,13 @@ namespace SpicyNvader
 
         
 
+        public List<Ennemi> EnemyList
+        {
+            get { return _enemyList; }
+            set { _enemyList = value; }
+        }
+
+
 
         public void CreateEnnemi()
         {
@@ -30,14 +37,19 @@ namespace SpicyNvader
             {
                 for (int u = 0; u < this._numberOfEnnemiByRow; u++)
                 {
-                    _enemyList.Add(new Ennemi(xPose: u * 13 + 5, yPose: i * 6 + 5, speed: 1, alive: true, isShooting: false, id: 1 * _numberOfEnnemiByRow + u)); 
+                    _enemyList.Add(new Ennemi(xPose: u * 13 + 5, yPose: i * 6 + 5, speed: 1, alive: true, isShooting: false, id: i * _numberOfEnnemiByRow + u)); 
                 }
             }
+            
 
-            foreach(Ennemi enemy in this._enemyList)
+            foreach (Ennemi enemy in this._enemyList)
             {
-                enemy.DisplayEnnemi(enemy.XPose, enemy.YPose);
+                enemy.DisplayEnnemi();
             }
+
+
+            
+            
            
         }
 
@@ -47,7 +59,7 @@ namespace SpicyNvader
             {
                 if(enemy.Alive)
                 {
-                    enemy.EreaseEnnemi(enemy.XPose, enemy.YPose);
+                    enemy.EreaseEnnemi();
 
                     if (enemy.Direction == 1)
                         enemy.XPose += 4;
@@ -64,30 +76,34 @@ namespace SpicyNvader
             {
                 if (enemy.Alive)
                 {
-                    enemy.DisplayEnnemi(enemy.XPose, enemy.YPose);
+                    enemy.DisplayEnnemi();
+                }
+                else
+                {
+                    
                 }
             }
         }
 
-        public void CheckBorder()
+        public bool CheckBorder()
         {
             foreach (Ennemi enemy in this._enemyList)
             {
-                if ((enemy.XPose <= 4 || enemy.XPose >= 116) && enemy.Alive)
+                if (((enemy.XPose <= 4 && enemy.Direction == 2) || (enemy.XPose >= 113 && enemy.Direction == 1)) && enemy.Alive)
                 {
                     foreach (Ennemi enemies in this._enemyList)
                     {
-                        enemies.EreaseEnnemi(enemies.XPose, enemies.YPose);
+                        enemies.EreaseEnnemi();
                         enemies.YPose += 6;
                         if (enemies.Direction == 1)
                         {
                             enemies.Direction = 2;
-                            enemies.XPose += 2;
+                            
                         }
                         else
                         {
                             enemies.Direction = 1;
-                            enemies.XPose -= 2;
+                           
                         }
 
                         
@@ -95,12 +111,17 @@ namespace SpicyNvader
                     }
                     foreach (Ennemi enemies in this._enemyList)
                     {
-                        enemy.DisplayEnnemi(enemies.XPose, enemies.YPose);
+                        if(enemies.Alive)
+                        {
+                            enemies.DisplayEnnemi();
+                        }
+                        
                     }
-
-                        break;
+                    return true;
+                        
                 }
             }
+            return false;
         }
 
     }

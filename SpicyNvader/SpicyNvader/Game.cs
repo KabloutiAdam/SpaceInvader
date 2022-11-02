@@ -48,32 +48,61 @@ namespace SpicyNvader
 
             Squad squad = new Squad();
             squad.CreateEnnemi();
+            
+
+            List<Bullet> bulletList = new List<Bullet>();
 
 
-
-
-            GameUpdate(player, squad);
+            GameUpdate(player, squad, bulletList);
         }
 
 
-        public void GameUpdate(Player player, Squad squad)
+        /// <summary>
+        /// A chaque frame
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="squad"></param>
+        public void GameUpdate(Player player, Squad squad, List<Bullet> bulletList)
         {
-            int timeCounter = 0;
+            int ennemiCounter = 0;
+            int bulletCounter = 0;
+            
             while (this._game)
             {
-               
-                 InputPlayer(player);
 
-              
-                
-                timeCounter++;
-                if(timeCounter == 5000)
+                bulletList = InputPlayer(player, bulletList);
+                if(player.Recoil > 0)
                 {
-                    squad.CheckBorder();
-                    squad.EnnemiMovement();
-                    timeCounter = 0;
-                    
+                    player.Recoil--;
                 }
+
+
+                bulletCounter++;
+                ennemiCounter++;
+                if (ennemiCounter == 5000)
+                {
+                    if (!squad.CheckBorder())
+                    {
+                        squad.EnnemiMovement();
+                    }
+
+                   
+
+                    ennemiCounter = 0;
+
+                }
+
+                if (bulletCounter == 1000)
+                {
+                    EreaseBullet(bulletList);
+                    BulletMovement(bulletList);
+                    DisplayBullet(bulletList);
+
+                    bulletCounter = 0;
+                }
+
+
+                CheckBulletColision(squad, bulletList);
 
             }
 
@@ -85,7 +114,7 @@ namespace SpicyNvader
 
         
 
-        public void InputPlayer(Player player)
+        public List<Bullet> InputPlayer(Player player, List<Bullet> bullet)
         {
             
             DisplayPlayer(player.X, player.Y);
@@ -123,9 +152,19 @@ namespace SpicyNvader
 
 
                 }
+                else if (key.Key == ConsoleKey.Spacebar)
+                {
+                    if(player.Recoil == 0)
+                    {
+                        player.Recoil = 10000;
+                        bullet.Add(new Bullet(player.X, player.Y));
+                    }
+                    
+                }
+
             }
 
-            
+            return bullet;
         }
 
 
@@ -145,6 +184,71 @@ namespace SpicyNvader
                 Console.SetCursorPosition(x, y - _void.Length + i);
                 Console.Write(_void[i]);
             }
+        }
+
+
+
+        public void CheckBulletColision(Squad squad, List<Bullet> bulletList)
+        {
+            foreach (Ennemi ennemi in squad.EnemyList)
+            {
+                foreach (Bullet bullet in bulletList)
+                {
+
+                    if (bullet.Y == ennemi.YPose + 4 && (bullet.X < ennemi.XPose + 11 && bullet.X > ennemi.XPose))
+                    {
+                        if (ennemi.Alive)
+                        {
+                            ennemi.EreaseEnnemi();
+                            ennemi.Alive = false;
+                            RemoveBullet(bulletList, bullet);
+                            break;
+                        }
+
+                    }
+
+                    if (bullet.Y == 1)
+                    {
+                        Console.SetCursorPosition(bullet.X, bullet.Y);
+                        Console.Write(" ");
+                        RemoveBullet(bulletList, bullet);
+                        break;
+                    }
+                }
+            }
+        }
+
+        public void BulletMovement(List<Bullet> bulletList)
+        {
+            foreach (Bullet bullet in bulletList)
+            {
+                bullet.Y -= 1;
+            }
+        }
+
+        public void DisplayBullet(List<Bullet> bulletList)
+        {
+            foreach(Bullet bullet in bulletList)
+            {
+                Console.SetCursorPosition(bullet.X, bullet.Y);
+                Console.Write("0");
+            }
+        }
+
+        public void EreaseBullet(List<Bullet> bulletList)
+        {
+            foreach (Bullet bullet in bulletList)
+            {
+                Console.SetCursorPosition(bullet.X, bullet.Y);
+                Console.Write(" ");
+            }
+        }
+
+
+
+        public void RemoveBullet(List<Bullet> bulletList, Bullet bullet)
+        {
+            bulletList.Remove(bullet);
         }
     }
 }
