@@ -19,6 +19,7 @@ namespace SpicyNvader
 
             Menu mainMenu = new Menu();
 
+            
             mainMenu.MainMenu();
 
             

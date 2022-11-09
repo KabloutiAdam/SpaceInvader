@@ -9,9 +9,9 @@ namespace SpicyNvader
     internal class Game
     {
 
-        private bool _sound;
+        private int _sound;
         private bool _game;
-        private string _difficulty;
+        private int _difficulty;
         
 
        
@@ -34,7 +34,7 @@ namespace SpicyNvader
 
         }
 
-        public Game(string difficulty, bool sound)
+        public Game(int difficulty, int sound)
         {
             this._difficulty = difficulty;
             this._sound = sound; 

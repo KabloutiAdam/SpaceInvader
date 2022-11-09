@@ -54,22 +54,63 @@ namespace SpicyNvader
             < <(___)(___)(___)
              \_\              ";
 
+        private const string DIFFICULTY = @"
+               ___  _______________________  ____ __________
+              / _ \/  _/ __/ __/  _/ ___/ / / / //_  __/ __/
+             / // // // _// _/_/ // /__/ /_/ / /__/ / / _/  
+            /____/___/_/ /_/ /___/\___/\____/____/_/ /___/  
+                                               ";
+
+        private const string SOUND = @"
+                               ________  _  __
+                              / __/ __ \/ |/ /
+                             _\ \/ /_/ /    / 
+                            /___/\____/_/|_/ ";
+
+        private static string[] oui = new string[4]
+        {
+            "  ____   __  ______",
+            " / __/  / / / /  _/",
+            "/ /_/  / /_/ // /  ",
+            " ____/ ____/ ___/   ",
+
+        };
+
+        private static string[] non = new string[4]
+        {
+            "    _  ______  _  __ ",
+            "   / |/ / __  / |/ / ",
+            "  /    / /_/ /    /  ",
+            " /_/|_/ ____/_/|_/   ",
+        };
+
+
+        private static string[] slash = new string[4]
+        {
+            "       __",
+            "    _/_/ ",
+            " _/_/    ",
+            "/_/      ",
+        };
+                            
+                                       
 
 
         public int CursorPosX = 64;
         public int CursorPosY = 3;
-        public string difficulty = "normal"; // difficulty dépendra du choix dans les options 
-        public bool sound = false; // "
+        public int difficulty = 0; // difficulty dépendra du choix dans les options 
+        public int sound = 0;      // "
+        public int[] arrOption = new int[2];
 
         public void MainMenu()
         {
             MainMenuDisplay();
 
+
             int arrowPosBase = 0;
-            int arrowPos = Input(arrowPosBase);
-            int[] arrOption = new int[2];
-            int difficulty = 0;
-            int sound = 0;
+            int arrowPos = Input(arrowPosBase,64, 23, 3);
+            
+            
 
             switch(arrowPos)
             {
@@ -79,6 +120,8 @@ namespace SpicyNvader
                 case 1:
                     Console.Clear();
                     arrOption = ShowOption(difficulty, sound);
+                    difficulty = arrOption[0];
+                    sound = arrOption[1];
                     break;
                 case 2:
 
@@ -106,29 +149,59 @@ namespace SpicyNvader
             Console.SetCursorPosition(CursorPosX, CursorPosY);
             Console.Write("<---");
         }
+        public void OptionMenuDisplay()
+        {
+            Console.WriteLine(DIFFICULTY);
+            Console.WriteLine(SOUND);
 
-        public int Input(int arrowPos)
+
+            for(int i = 0; i < oui.Length; i++)
+            {
+                if (sound == 0)
+                    Console.ForegroundColor = ConsoleColor.Green;
+                else
+                    Console.ForegroundColor = ConsoleColor.White;
+
+                Console.SetCursorPosition(13, 15 + i);
+                Console.Write(oui[i]);
+            }
+
+            for (int i = 0; i < non.Length; i++)
+            {
+                if (sound == 1)
+                    Console.ForegroundColor = ConsoleColor.Green;
+                else
+                    Console.ForegroundColor = ConsoleColor.White;
+
+                Console.SetCursorPosition(35, 15 + i);
+                Console.Write(non[i]);
+            }
+
+
+        }
+
+        public int Input(int arrowPos, int cursorPoseX, int CursorPosYMax, int CursorPosYMin)
         {
             while(true)
             {
                 ConsoleKeyInfo key = Console.ReadKey(true);
 
 
-                if (key.Key == ConsoleKey.DownArrow && CursorPosY < 23)
+                if (key.Key == ConsoleKey.DownArrow && CursorPosY < CursorPosYMax)
                 {
-                    Console.SetCursorPosition(CursorPosX - 3, CursorPosY);
+                    Console.SetCursorPosition(cursorPoseX - 3, CursorPosY);
                     Console.Write("       ");
                     CursorPosY += 5;
-                    Console.SetCursorPosition(CursorPosX, CursorPosY);
+                    Console.SetCursorPosition(cursorPoseX, CursorPosY);
                     Console.Write("<---");
                     arrowPos++;
                 }
-                else if(key.Key == ConsoleKey.UpArrow && CursorPosY > 3)
+                else if(key.Key == ConsoleKey.UpArrow && CursorPosY > CursorPosYMin)
                 {
-                    Console.SetCursorPosition(CursorPosX - 3, CursorPosY);
+                    Console.SetCursorPosition(cursorPoseX - 3, CursorPosY);
                     Console.Write("       ");
                     CursorPosY -= 5;
-                    Console.SetCursorPosition(CursorPosX, CursorPosY);
+                    Console.SetCursorPosition(cursorPoseX, CursorPosY);
                     Console.Write("<---");
                     arrowPos--;
                 }
@@ -163,7 +236,17 @@ namespace SpicyNvader
 
         public int[] ShowOption(int difficulty, int sound)
         {
+
+            OptionMenuDisplay();
+            switch(Input(0, 64, 23, 3))
+            {
+                case 1:
+                    OptionMenuDisplay();
+                    break;
+            }
+
             int[] option = new int[2];
+
 
 
 
