@@ -67,6 +67,9 @@ namespace SpicyNvader
 
             int arrowPosBase = 0;
             int arrowPos = Input(arrowPosBase);
+            int[] arrOption = new int[2];
+            int difficulty = 0;
+            int sound = 0;
 
             switch(arrowPos)
             {
@@ -75,6 +78,7 @@ namespace SpicyNvader
                     break;
                 case 1:
                     Console.Clear();
+                    arrOption = ShowOption(difficulty, sound);
                     break;
                 case 2:
 
@@ -157,7 +161,14 @@ namespace SpicyNvader
         }
 
 
+        public int[] ShowOption(int difficulty, int sound)
+        {
+            int[] option = new int[2];
 
+
+
+            return option;
+        }
 
 
 
