@@ -62,17 +62,29 @@ namespace SpicyNvader
                                                ";
 
         private const string SOUND = @"
+
+
+
                                ________  _  __
                               / __/ __ \/ |/ /
                              _\ \/ /_/ /    / 
                             /___/\____/_/|_/ ";
 
+        private const string RETOUR = @"
+
+
+
+                     ___  ______________  __  _____ 
+                    / _ \/ __/_  __/ __ \/ / / / _ \
+                   / , _/ _/  / / / /_/ / /_/ / , _/
+                  /_/|_/___/ /_/  \____/\____/_/|_|  ";
+
         private static string[] oui = new string[4]
         {
-            "  ____   __  ______",
-            " / __/  / / / /  _/",
-            "/ /_/  / /_/ // /  ",
-            " ____/ ____/ ___/   ",
+            "   _____  __  ______ ",
+            "  / __  // / / /  _/ ",
+            " / /_/ // /_/ // /   ",
+            "/_____//_____/___/   ",
 
         };
 
@@ -81,7 +93,7 @@ namespace SpicyNvader
             "    _  ______  _  __ ",
             "   / |/ / __  / |/ / ",
             "  /    / /_/ /    /  ",
-            " /_/|_/ ____/_/|_/   ",
+            " /_/|_/|____/_/|_/   ",
         };
 
 
@@ -92,14 +104,34 @@ namespace SpicyNvader
             " _/_/    ",
             "/_/      ",
         };
-                            
-                                       
+
+        private static string[] jedi = new string[4]
+        {
+            "     _________ ____  ",
+            " __ / / __/ _  /  _/ ",
+            "/ // / _// // // /   ",
+            " ___/___/____/___/   ",
+        };
+
+        private static string[] padawan = new string[4]
+        {
+            "   ___  ___   ___  ___ _      _____   _  __",
+            "  / _ |/ _ | / _ |/ _ | | /| / / _ | / |/ /",
+            " / ___/ __ |/ // / __ | |/ |/ / __ |/    / ",
+            "/_/  /_/ |_/____/_/ |_|__/|__/_/ |_/_/|_/  ",
+
+
+        };
+
+
+
+
 
 
         public int CursorPosX = 64;
         public int CursorPosY = 3;
-        public int difficulty = 0; // difficulty dépendra du choix dans les options 
-        public int sound = 0;      // "
+        public int difficulty = 1; // difficulty dépendra du choix dans les options 
+        public int sound = 1;      // "
         public int[] arrOption = new int[2];
 
         public void MainMenu()
@@ -108,7 +140,7 @@ namespace SpicyNvader
 
 
             int arrowPosBase = 0;
-            int arrowPos = Input(arrowPosBase,64, 23, 3);
+            int arrowPos = Input(arrowPosBase,64,3, 23, 3, 5);
             
             
 
@@ -119,18 +151,20 @@ namespace SpicyNvader
                     break;
                 case 1:
                     Console.Clear();
-                    arrOption = ShowOption(difficulty, sound);
-                    difficulty = arrOption[0];
-                    sound = arrOption[1];
+                    ShowOption();
+                    
                     break;
                 case 2:
-
+                    Console.Clear();
+                    ShowHighScore();
                     break;
                 case 3:
-
+                    Console.Clear();
+                    ShowAbout();
                     break;
                 case 4:
-
+                    Console.Clear();
+                    ShowExit();
                     break;
             }
         }
@@ -152,56 +186,83 @@ namespace SpicyNvader
         public void OptionMenuDisplay()
         {
             Console.WriteLine(DIFFICULTY);
+            for (int i = 0; i < jedi.Length; i++)
+            {
+                if (this.difficulty == 0)
+                    Console.ForegroundColor = ConsoleColor.Green;
+                else
+                    Console.ForegroundColor = ConsoleColor.White;
+
+                Console.SetCursorPosition(5, 7 + i);
+                Console.Write(jedi[i]);
+                Console.ForegroundColor = ConsoleColor.White;
+            }
+
+            for (int i = 0; i < padawan.Length; i++)
+            {
+                if (this.difficulty == 1)
+                    Console.ForegroundColor = ConsoleColor.Red;
+                else
+                    Console.ForegroundColor = ConsoleColor.White;
+
+                Console.SetCursorPosition(25, 7 + i);
+                Console.Write(padawan[i]);
+                Console.ForegroundColor = ConsoleColor.White;
+            }
+
             Console.WriteLine(SOUND);
 
 
             for(int i = 0; i < oui.Length; i++)
             {
-                if (sound == 0)
+                if (this.sound == 0)
                     Console.ForegroundColor = ConsoleColor.Green;
                 else
                     Console.ForegroundColor = ConsoleColor.White;
 
-                Console.SetCursorPosition(13, 15 + i);
+                Console.SetCursorPosition(13, 20 + i);
                 Console.Write(oui[i]);
+                Console.ForegroundColor = ConsoleColor.White;
             }
 
             for (int i = 0; i < non.Length; i++)
             {
-                if (sound == 1)
-                    Console.ForegroundColor = ConsoleColor.Green;
+                if (this.sound == 1)
+                    Console.ForegroundColor = ConsoleColor.Red;
                 else
                     Console.ForegroundColor = ConsoleColor.White;
 
-                Console.SetCursorPosition(35, 15 + i);
+                Console.SetCursorPosition(35, 20 + i);
                 Console.Write(non[i]);
+                Console.ForegroundColor = ConsoleColor.White;
             }
 
+            Console.WriteLine(RETOUR);
 
         }
 
-        public int Input(int arrowPos, int cursorPoseX, int CursorPosYMax, int CursorPosYMin)
+        public int Input(int arrowPos, int cursorPoseX, int cursorPoseY, int CursorPosYMax, int CursorPosYMin, int interval)
         {
             while(true)
             {
                 ConsoleKeyInfo key = Console.ReadKey(true);
 
 
-                if (key.Key == ConsoleKey.DownArrow && CursorPosY < CursorPosYMax)
+                if (key.Key == ConsoleKey.DownArrow && cursorPoseY < CursorPosYMax)
                 {
-                    Console.SetCursorPosition(cursorPoseX - 3, CursorPosY);
+                    Console.SetCursorPosition(cursorPoseX - 3, cursorPoseY);
                     Console.Write("       ");
-                    CursorPosY += 5;
-                    Console.SetCursorPosition(cursorPoseX, CursorPosY);
+                    cursorPoseY += interval;
+                    Console.SetCursorPosition(cursorPoseX, cursorPoseY);
                     Console.Write("<---");
                     arrowPos++;
                 }
-                else if(key.Key == ConsoleKey.UpArrow && CursorPosY > CursorPosYMin)
+                else if(key.Key == ConsoleKey.UpArrow && cursorPoseY > CursorPosYMin)
                 {
-                    Console.SetCursorPosition(cursorPoseX - 3, CursorPosY);
+                    Console.SetCursorPosition(cursorPoseX - 3, cursorPoseY);
                     Console.Write("       ");
-                    CursorPosY -= 5;
-                    Console.SetCursorPosition(cursorPoseX, CursorPosY);
+                    cursorPoseY -= interval;
+                    Console.SetCursorPosition(cursorPoseX, cursorPoseY);
                     Console.Write("<---");
                     arrowPos--;
                 }
@@ -227,30 +288,82 @@ namespace SpicyNvader
 
             Console.CursorVisible = false;
 
-            Game game = new Game(difficulty, sound);
+            Game game = new Game(this.difficulty, this.sound);
             game.StartGame();
 
 
         }
 
 
-        public int[] ShowOption(int difficulty, int sound)
+        public void ShowOption()
+        {
+            int yCursor = 3;
+            int arrowPose = 0;
+            bool option = true;
+            while (option)
+            {
+
+                
+                OptionMenuDisplay();
+                Console.SetCursorPosition(64, yCursor);
+                Console.Write("<---");
+                
+
+                switch (Input(arrowPose, 64,yCursor, 29, 3, 13))
+                {
+                    case 0:
+                        if (this.difficulty == 0)
+                            this.difficulty = 1;
+                        else
+                            this.difficulty = 0;
+                        yCursor = 3;
+                        arrowPose = 0;
+
+                        Console.Clear();
+                        break;
+                    case 1:
+                        if (this.sound == 0)
+                            this.sound = 1;
+                        else
+                            this.sound = 0;
+
+                        yCursor = 16;
+                        arrowPose = 1;
+
+
+                        Console.Clear();
+                        break;
+                    case 2:
+                        option = false;
+                        break;
+                        
+
+                }
+                
+            }
+            Console.Clear();
+            MainMenu();
+
+
+
+
+
+
+        }
+
+        public void ShowHighScore()
         {
 
-            OptionMenuDisplay();
-            switch(Input(0, 64, 23, 3))
-            {
-                case 1:
-                    OptionMenuDisplay();
-                    break;
-            }
+        }
 
-            int[] option = new int[2];
+        public void ShowAbout()
+        {
 
+        }
 
+        public void ShowExit()
+        {
 
-
-            return option;
         }
 
 

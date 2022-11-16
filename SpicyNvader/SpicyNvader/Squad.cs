@@ -9,40 +9,60 @@ namespace SpicyNvader
     internal class Squad
     {
 
+        /// <summary>
+        /// Nombre d'ennemis par ligne
+        /// </summary>
+        private int _numberOfEnnemiByRow;
 
-        private int _numberOfEnnemiByRow = 4;
-        private int _numberOfRow = 2;
-        private int _maxLeft = 0;
-        private int _maxTop = 0;
-        private List<Ennemi> _enemyList = new List<Ennemi>();
+        /// <summary>
+        /// Nombre de ligne d'ennemis
+        /// </summary>
+        private int _numberOfRow;
 
-        public Squad()
+        /// <summary>
+        /// Liste de tous les ennemis de type Enemy
+        /// </summary>
+        private List<Enemy> _enemyList = new List<Enemy>();
+
+
+        /// <summary>
+        /// Constructeur Custom
+        /// </summary>
+        /// <param name="numberOfEnemyByRow"></param>
+        /// <param name="numberOfRow"></param>
+        public Squad(int numberOfEnemyByRow, int numberOfRow)
         {
-
+            _numberOfEnnemiByRow = numberOfEnemyByRow;
+            _numberOfRow = numberOfRow;
         }
 
         
-
-        public List<Ennemi> EnemyList
+        /// <summary>
+        /// Getter Setter de la liste des ennemis
+        /// </summary>
+        public List<Enemy> EnemyList
         {
             get { return _enemyList; }
             set { _enemyList = value; }
         }
 
 
-
+        /// <summary>
+        /// Méthode pour créer les ennemis selon le nombre de ligne et le nombre d'ennemis par ligne 
+        /// </summary>
         public void CreateEnnemi()
         {
             for(int i = 0; i < this._numberOfRow; i++)
             {
                 for (int u = 0; u < this._numberOfEnnemiByRow; u++)
                 {
-                    _enemyList.Add(new Ennemi(xPose: u * 13 + 5, yPose: i * 6 + 5, speed: 1, alive: true, isShooting: false, id: i * _numberOfEnnemiByRow + u)); 
+                    //ajoute à la liste les nouveaux ennemis
+                    _enemyList.Add(new Enemy(xPose: u * 13 + 5, yPose: i * 6 + 5, speed: 1, alive: true, isShooting: false, id: i * _numberOfEnnemiByRow + u)); 
                 }
             }
             
-
-            foreach (Ennemi enemy in this._enemyList)
+            // Affiche chaque ennemis dans la console
+            foreach (Enemy enemy in this._enemyList)
             {
                 enemy.DisplayEnnemi();
             }
@@ -53,12 +73,18 @@ namespace SpicyNvader
            
         }
 
+        /// <summary>
+        /// Méthode que mets les ennemis en mouvement
+        /// </summary>
         public void EnnemiMovement()
         {
-            foreach (Ennemi enemy in this._enemyList)
+            // Pour chaque ennemis de la liste 
+            foreach (Enemy enemy in this._enemyList)
             {
-                if(enemy.Alive)
+                // Regarde s'il est vivant 
+                if(enemy.Alive) 
                 {
+                    // Efface l'ennemis
                     enemy.EreaseEnnemi();
 
                     if (enemy.Direction == 1)
@@ -72,10 +98,11 @@ namespace SpicyNvader
 
             }
 
-            foreach (Ennemi enemy in this._enemyList)
+            foreach (Enemy enemy in this._enemyList)
             {
                 if (enemy.Alive)
                 {
+                    // Affiche les ennemis vivant
                     enemy.DisplayEnnemi();
                 }
                 else
@@ -85,46 +112,48 @@ namespace SpicyNvader
             }
         }
 
+
+        /// <summary>
+        /// Méthode qui fait les collisions des vaisseaux ennemis avec les bords de la console
+        /// </summary>
+        /// <returns>
+        /// Retourn un vrai s'il touche un bord, un faux s'il ne touche rien 
+        /// </returns>
         public bool CheckBorder()
         {
-            foreach (Ennemi enemy in this._enemyList)
+            // Pour chaque ennemis de la liste
+            foreach (Enemy enemy in this._enemyList)
             {
+                // Regarde si un ennemi a un contacte avec le bord de la console et est vivant
                 if (((enemy.XPose <= 4 && enemy.Direction == 2) || (enemy.XPose >= 113 && enemy.Direction == 1)) && enemy.Alive)
                 {
-                    foreach (Ennemi enemies in this._enemyList)
+                    foreach (Enemy enemies in this._enemyList)
                     {
+                        // Efface chaque ennemi, les descend d'une ligne puis change leur direction
                         enemies.EreaseEnnemi();
                         enemies.YPose += 6;
                         if (enemies.Direction == 1)
                         {
                             enemies.Direction = 2;
-                            
                         }
                         else
                         {
                             enemies.Direction = 1;
-                           
                         }
-
-                        
-                        
                     }
-                    foreach (Ennemi enemies in this._enemyList)
+
+                    // Réaffiche tous les ennemis vivant à leur nouvelle place
+                    foreach (Enemy enemies in this._enemyList)
                     {
                         if(enemies.Alive)
                         {
                             enemies.DisplayEnnemi();
                         }
-                        
                     }
                     return true;
-                        
                 }
             }
             return false;
         }
-
     }
-
-    
 }
