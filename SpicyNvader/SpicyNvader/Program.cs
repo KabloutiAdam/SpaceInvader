@@ -10,15 +10,16 @@ namespace SpicyNvader
     {
         static void Main(string[] args)
         {
-
-            Console.SetWindowSize(70, 50);
+            //Redimensionne la fenêtre de la console 
+            Console.SetWindowSize(170, 50);
             Console.BufferHeight = 50;
-            Console.BufferWidth = 70;
+            Console.BufferWidth = 170;
 
+            //Rend le curseur invisible
             Console.CursorVisible = false;
 
+            //Instancie un objet "Menu"
             Menu mainMenu = new Menu();
-
             
             mainMenu.MainMenu();
 

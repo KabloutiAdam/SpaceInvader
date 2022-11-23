@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace SpicyNvader
 {
@@ -16,69 +17,128 @@ namespace SpicyNvader
 
         }
 
+        private const string TITLE = @"
+   ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄▄       ▄▄▄▄▄▄▄▄▄▄▄  ▄▄        ▄  ▄               ▄  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄   ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄▄ 
+  ▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌     ▐░░░░░░░░░░░▌▐░░▌      ▐░▌▐░▌             ▐░▌▐░░░░░░░░░░░▌▐░░░░░░░░░░▌ ▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌
+  ▐░█▀▀▀▀▀▀▀▀▀ ▐░█▀▀▀▀▀▀▀█░▌▐░█▀▀▀▀▀▀▀█░▌▐░█▀▀▀▀▀▀▀▀▀ ▐░█▀▀▀▀▀▀▀▀▀       ▀▀▀▀█░█▀▀▀▀ ▐░▌░▌     ▐░▌ ▐░▌           ▐░▌ ▐░█▀▀▀▀▀▀▀█░▌▐░█▀▀▀▀▀▀▀█░▌▐░█▀▀▀▀▀▀▀▀▀ ▐░█▀▀▀▀▀▀▀█░▌
+  ▐░▌          ▐░▌       ▐░▌▐░▌       ▐░▌▐░▌          ▐░▌                    ▐░▌     ▐░▌▐░▌    ▐░▌  ▐░▌         ▐░▌  ▐░▌       ▐░▌▐░▌       ▐░▌▐░▌          ▐░▌       ▐░▌
+  ▐░█▄▄▄▄▄▄▄▄▄ ▐░█▄▄▄▄▄▄▄█░▌▐░█▄▄▄▄▄▄▄█░▌▐░▌          ▐░█▄▄▄▄▄▄▄▄▄           ▐░▌     ▐░▌ ▐░▌   ▐░▌   ▐░▌       ▐░▌   ▐░█▄▄▄▄▄▄▄█░▌▐░▌       ▐░▌▐░█▄▄▄▄▄▄▄▄▄ ▐░█▄▄▄▄▄▄▄█░▌
+  ▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌▐░▌          ▐░░░░░░░░░░░▌          ▐░▌     ▐░▌  ▐░▌  ▐░▌    ▐░▌     ▐░▌    ▐░░░░░░░░░░░▌▐░▌       ▐░▌▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌
+   ▀▀▀▀▀▀▀▀▀█░▌▐░█▀▀▀▀▀▀▀▀▀ ▐░█▀▀▀▀▀▀▀█░▌▐░▌          ▐░█▀▀▀▀▀▀▀▀▀           ▐░▌     ▐░▌   ▐░▌ ▐░▌     ▐░▌   ▐░▌     ▐░█▀▀▀▀▀▀▀█░▌▐░▌       ▐░▌▐░█▀▀▀▀▀▀▀▀▀ ▐░█▀▀▀▀█░█▀▀ 
+            ▐░▌▐░▌          ▐░▌       ▐░▌▐░▌          ▐░▌                    ▐░▌     ▐░▌    ▐░▌▐░▌      ▐░▌ ▐░▌      ▐░▌       ▐░▌▐░▌       ▐░▌▐░▌          ▐░▌     ▐░▌  
+   ▄▄▄▄▄▄▄▄▄█░▌▐░▌          ▐░▌       ▐░▌▐░█▄▄▄▄▄▄▄▄▄ ▐░█▄▄▄▄▄▄▄▄▄       ▄▄▄▄█░█▄▄▄▄ ▐░▌     ▐░▐░▌       ▐░▐░▌       ▐░▌       ▐░▌▐░█▄▄▄▄▄▄▄█░▌▐░█▄▄▄▄▄▄▄▄▄ ▐░▌      ▐░▌ 
+  ▐░░░░░░░░░░░▌▐░▌          ▐░▌       ▐░▌▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌     ▐░░░░░░░░░░░▌▐░▌      ▐░░▌        ▐░▌        ▐░▌       ▐░▌▐░░░░░░░░░░▌ ▐░░░░░░░░░░░▌▐░▌       ▐░▌
+   ▀▀▀▀▀▀▀▀▀▀▀  ▀            ▀         ▀  ▀▀▀▀▀▀▀▀▀▀▀  ▀▀▀▀▀▀▀▀▀▀▀       ▀▀▀▀▀▀▀▀▀▀▀  ▀        ▀▀          ▀          ▀         ▀  ▀▀▀▀▀▀▀▀▀▀   ▀▀▀▀▀▀▀▀▀▀▀  ▀         ▀ ";
 
-
+        /// <summary>
+        /// Const texte "JOUER" en ascii font
+        /// </summary>
         private const string PLAY = @"
-                             ______  __  _________ 
-                         __ / / __ \/ / / / __/ _ \
-                        / // / /_/ / /_/ / _// , _/
-                        \___/\____/\____/___/_/|_|";
+                                                                             ______  __  _________ 
+                                                                         __ / / __ \/ / / / __/ _ \
+                                                                        / // / /_/ / /_/ / _// , _/
+                                                                        \___/\____/\____/___/_/|_|";
 
+        /// <summary>
+        /// Const texte "OPTION" en ascii font
+        /// </summary>
         private const string OPTION = @"
-                      ____  ___  ______________  _  __
-                     / __ \/ _ \/_  __/  _/ __ \/ |/ /
-                    / /_/ / ___/ / / _/ // /_/ /    / 
-                    \____/_/    /_/ /___/\____/_/|_/  ";
+                                                                       ____  ___  ______________  _  __
+                                                                      / __ \/ _ \/_  __/  _/ __ \/ |/ /
+                                                                     / /_/ / ___/ / / _/ // /_/ /    / 
+                                                                     \____/_/    /_/ /___/\____/_/|_/  ";
 
+        /// <summary>
+        /// Const texte "HIGHSCORE" en ascii font
+        /// </summary>
         private const string HIGHSCORE = @"
-                   __ _____________ _______________  ___  ____
-                  / // /  _/ ___/ // / __/ ___/ __ \/ _ \/ __/
-                 / _  // // (_ / _  /\ \/ /__/ /_/ / , _/ _/  
-                /_//_/___/\___/_//_/___/\___/\____/_/|_/___/  ";
+                                                                  __ _____________ _______________  ___  ____
+                                                                 / // /  _/ ___/ // / __/ ___/ __ \/ _ \/ __/
+                                                                / _  // // (_ / _  /\ \/ /__/ /_/ / , _/ _/  
+                                                               /_//_/___/\___/_//_/___/\___/\____/_/|_/___/  ";
 
+        /// <summary>
+        /// Const texte "A PROPOS" en ascii font
+        /// </summary>
         private const string APROPOS = @"
-                   ___     ___  ___  ____  ___  ____  ____
-                  / _ |   / _ \/ _ \/ __ \/ _ \/ __ \/ __/
-                 / __ |  / ___/ , _/ /_/ / ___/ /_/ /\ \  
-                /_/ |_| /_/  /_/|_|\____/_/   \____/___/  ";
+                                                                   ___     ___  ___  ____  ___  ____  ____
+                                                                  / _ |   / _ \/ _ \/ __ \/ _ \/ __ \/ __/
+                                                                 / __ |  / ___/ , _/ /_/ / ___/ /_/ /\ \  
+                                                                /_/ |_| /_/  /_/|_|\____/_/   \____/___/  ";
 
+        /// <summary>
+        /// Const texte "EXIT" en ascii font
+        /// </summary>
         private const string EXIT = @"
-                           _____  ____________
-                          / __/ |/_/  _/_  __/
-                         / _/_>  <_/ /  / /   
-                        /___/_/|_/___/ /_/    ";
+                                                                            _____  ____________
+                                                                           / __/ |/_/  _/_  __/
+                                                                          / _/_>  <_/ /  / /   
+                                                                         /___/_/|_/___/ /_/    ";
 
-        private const string ARROW = @"     
-              __              
-             / /___  ___  ___ 
-            < <(___)(___)(___)
-             \_\              ";
+        
 
+        /// <summary>
+        /// Const texte "DIFFICULTE" en ascii font
+        /// </summary>
         private const string DIFFICULTY = @"
-               ___  _______________________  ____ __________
-              / _ \/  _/ __/ __/  _/ ___/ / / / //_  __/ __/
-             / // // // _// _/_/ // /__/ /_/ / /__/ / / _/  
-            /____/___/_/ /_/ /___/\___/\____/____/_/ /___/  
-                                               ";
+                                                                ___  _______________________  ____ __________
+                                                               / _ \/  _/ __/ __/  _/ ___/ / / / //_  __/ __/
+                                                              / // // // _// _/_/ // /__/ /_/ / /__/ / / _/  
+                                                             /____/___/_/ /_/ /___/\___/\____/____/_/ /___/  
+                                                                                               ";
 
+        /// <summary>
+        /// Const texte "SON" en ascii font
+        /// </summary>
         private const string SOUND = @"
 
 
 
-                               ________  _  __
-                              / __/ __ \/ |/ /
-                             _\ \/ /_/ /    / 
-                            /___/\____/_/|_/ ";
+                                                                            ________  _  __
+                                                                           / __/ __ \/ |/ /
+                                                                          _\ \/ /_/ /    / 
+                                                                         /___/\____/_/|_/ ";
 
+        /// <summary>
+        /// Const texte "RETOUR" en ascii font
+        /// </summary>
         private const string RETOUR = @"
 
 
 
-                     ___  ______________  __  _____ 
-                    / _ \/ __/_  __/ __ \/ / / / _ \
-                   / , _/ _/  / / / /_/ / /_/ / , _/
-                  /_/|_/___/ /_/  \____/\____/_/|_|  ";
+                                                                   ___  ______________  __  _____ 
+                                                                  / _ \/ __/_  __/ __ \/ / / / _ \
+                                                                 / , _/ _/  / / / /_/ / /_/ / , _/
+                                                                /_/|_/___/ /_/  \____/\____/_/|_|  ";
 
+
+        /// <summary>
+        /// Tableau de string "<---" en ascii font
+        /// </summary>
+        private static string[] arrow = new string[4]
+        {
+            "    __              ",
+            "   / /___  ___  ___ ",
+            "  < <(___)(___)(___)",
+            "   |_|              ",
+        };
+
+        /// <summary>
+        /// Tableau de vide remplacant la flèche en ascii font
+        /// </summary>
+        private static string[] voidArrow = new string[4]
+       {
+            "                    ",
+            "                    ",
+            "                    ",
+            "                    ",
+       };
+
+
+
+        /// <summary>
+        /// Tableau de string "OUI" en ascii font
+        /// </summary>
         private static string[] oui = new string[4]
         {
             "   _____  __  ______ ",
@@ -88,6 +148,9 @@ namespace SpicyNvader
 
         };
 
+        /// <summary>
+        /// Tableau de string "NON" en ascii font
+        /// </summary>
         private static string[] non = new string[4]
         {
             "    _  ______  _  __ ",
@@ -97,6 +160,9 @@ namespace SpicyNvader
         };
 
 
+        /// <summary>
+        /// Tableau de string "/" en ascii font
+        /// </summary>
         private static string[] slash = new string[4]
         {
             "       __",
@@ -105,6 +171,9 @@ namespace SpicyNvader
             "/_/      ",
         };
 
+        /// <summary>
+        /// Tableau de string "JEDI" en ascii font
+        /// </summary>
         private static string[] jedi = new string[4]
         {
             "     _________ ____  ",
@@ -113,6 +182,9 @@ namespace SpicyNvader
             " ___/___/____/___/   ",
         };
 
+        /// <summary>
+        /// Tableau de string "PADAWAN" en ascii font
+        /// </summary>
         private static string[] padawan = new string[4]
         {
             "   ___  ___   ___  ___ _      _____   _  __",
@@ -124,56 +196,87 @@ namespace SpicyNvader
         };
 
 
+        /// <summary>
+        /// Position X du curseur
+        /// </summary>
+        public int CursorPosX = 110;
 
+        /// <summary>
+        /// Position Y du curseur
+        /// </summary>
+        public int CursorPosY = 13;
 
+        /// <summary>
+        /// Difficulté de la partie. 0 = Facile / 1 = Difficile
+        /// </summary>
+        public int difficulty = 0; 
 
-
-        public int CursorPosX = 64;
-        public int CursorPosY = 3;
-        public int difficulty = 1; // difficulty dépendra du choix dans les options 
-        public int sound = 1;      // "
+        /// <summary>
+        /// Son de la partie. 0 = activé / 1 = désactivé
+        /// </summary>
+        public int sound = 0;   
+        
+        /// <summary>
+        /// Tableau qui contient les options du jeu (difficulté et son)
+        /// </summary>
         public int[] arrOption = new int[2];
 
+        /// <summary>
+        /// Pseudo du joueur
+        /// </summary>
+        private string pseudo;
+
+
+
+
+        #region Menu
+        /// <summary>
+        /// Menu du jeu
+        /// </summary>
         public void MainMenu()
         {
             MainMenuDisplay();
 
 
             int arrowPosBase = 0;
-            int arrowPos = Input(arrowPosBase,64,3, 23, 3, 5);
-            
-            
+            int arrowPos = Input(arrowPosBase, 110, 13, 33, 13, 5);
 
-            switch(arrowPos)
+
+            // Regarde quelle sur quelle position de la flèche lors de l'entrée de la touche "Enter"
+            switch (arrowPos)
             {
-                case 0:
-                    StartGame();
+                case 0: // Option : Jouer
+                    InsertPseudo();
                     break;
-                case 1:
+                case 1: // Option : Option
                     Console.Clear();
                     ShowOption();
-                    
+
                     break;
-                case 2:
+                case 2: // Option : Highscore
                     Console.Clear();
                     ShowHighScore();
                     break;
-                case 3:
+                case 3: // Option : A propos
                     Console.Clear();
                     ShowAbout();
                     break;
-                case 4:
+                case 4: // Option : Exit
                     Console.Clear();
                     ShowExit();
                     break;
             }
         }
 
+
         /// <summary>
-        /// Display Menu
+        /// Affiche le menu principal
         /// </summary>
         public void MainMenuDisplay()
         {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine(TITLE);
+            Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine(PLAY);
             Console.WriteLine(OPTION);
             Console.WriteLine(HIGHSCORE);
@@ -181,11 +284,95 @@ namespace SpicyNvader
             Console.WriteLine(EXIT);
 
             Console.SetCursorPosition(CursorPosX, CursorPosY);
-            Console.Write("<---");
+            for (int i = 0; i < arrow.Length; i++)
+            {
+                Console.SetCursorPosition(CursorPosX, CursorPosY + i);
+                Console.Write(arrow[i]);
+            }
         }
+
+        /// <summary>
+        /// Méthode qui gère les inputs du joueur dans les menus
+        /// </summary>
+        /// <param name="arrowPos"> position de départ de la flèche (0, 1, 2...) </param>
+        /// <param name="cursorPoseX"> Position X de la flèch e</param>
+        /// <param name="cursorPoseY"> Position Y de départ de la flèche </param>
+        /// <param name="CursorPosYMax"> Position Y maximum de la flèche </param>
+        /// <param name="CursorPosYMin"> Position Y minimum de la flèche </param>
+        /// <param name="interval"> Le nombre de ligne entre chaque option (nb de ligne du saut de la flèche) </param>
+        /// <returns> Retourne la position de la flèche lors de l'appuie de "Enter" </returns>
+        public int Input(int arrowPos, int cursorPoseX, int cursorPoseY, int CursorPosYMax, int CursorPosYMin, int interval)
+        {
+            while (true)
+            {
+                //Regarde quelle touche à été appuyée
+                ConsoleKeyInfo key = Console.ReadKey(true);
+
+                //Si touche = flèche du bas
+                if (key.Key == ConsoleKey.DownArrow && cursorPoseY < CursorPosYMax)
+                {
+
+                    DrawArrow(cursorPoseX, cursorPoseY, interval);
+                    cursorPoseY += interval;
+                    arrowPos++;
+                }
+                //Si touche = flèche du haut
+                else if (key.Key == ConsoleKey.UpArrow && cursorPoseY > CursorPosYMin)
+                {
+                    DrawArrow(cursorPoseX, cursorPoseY, -interval);
+                    cursorPoseY -= interval;
+                    arrowPos--;
+                }
+                //si flèche = Enter
+                else if (key.Key == ConsoleKey.Enter)
+                {
+                    return arrowPos;
+                }
+
+
+            }
+
+
+        }
+
+        /// <summary>
+        /// Méthode qui efface l'ancienne flèche et qui la redessine au nouvel endroit
+        /// </summary>
+        /// <param name="poseX"> Position X de l'ancienne flèche</param>
+        /// <param name="poseY"> Position Y de l'ancienne flèche</param>
+        /// <param name="interval"> intervale de ligne entre l'ancienne et la nouvelle flèche</param>
+        public void DrawArrow(int poseX, int poseY, int interval)
+        {
+
+
+            for (int i = 0; i < voidArrow.Length; i++)
+            {
+                Console.SetCursorPosition(poseX, poseY + i);
+                Console.Write(voidArrow[i]);
+            }
+
+            poseY += interval;
+
+            for (int i = 0; i < arrow.Length; i++)
+            {
+                Console.SetCursorPosition(poseX, poseY + i);
+                Console.Write(arrow[i]);
+            }
+        }
+
+
+        #endregion
+
+
+        #region Option
+        /// <summary>
+        /// Affiche le menu des options 
+        /// </summary>
         public void OptionMenuDisplay()
         {
             Console.WriteLine(DIFFICULTY);
+
+            //Affiche le texte de la difficulté en couleur selon la difficulté (jedi : vert / padawan : rouge)
             for (int i = 0; i < jedi.Length; i++)
             {
                 if (this.difficulty == 0)
@@ -193,7 +380,7 @@ namespace SpicyNvader
                 else
                     Console.ForegroundColor = ConsoleColor.White;
 
-                Console.SetCursorPosition(5, 7 + i);
+                Console.SetCursorPosition(45, 7 + i);
                 Console.Write(jedi[i]);
                 Console.ForegroundColor = ConsoleColor.White;
             }
@@ -205,7 +392,7 @@ namespace SpicyNvader
                 else
                     Console.ForegroundColor = ConsoleColor.White;
 
-                Console.SetCursorPosition(25, 7 + i);
+                Console.SetCursorPosition(80, 7 + i);
                 Console.Write(padawan[i]);
                 Console.ForegroundColor = ConsoleColor.White;
             }
@@ -213,14 +400,15 @@ namespace SpicyNvader
             Console.WriteLine(SOUND);
 
 
-            for(int i = 0; i < oui.Length; i++)
+            //Affiche le texte de le son en couleur selon le son (oui : vert / non : rouge)
+            for (int i = 0; i < oui.Length; i++)
             {
                 if (this.sound == 0)
                     Console.ForegroundColor = ConsoleColor.Green;
                 else
                     Console.ForegroundColor = ConsoleColor.White;
 
-                Console.SetCursorPosition(13, 20 + i);
+                Console.SetCursorPosition(53, 20 + i);
                 Console.Write(oui[i]);
                 Console.ForegroundColor = ConsoleColor.White;
             }
@@ -232,7 +420,7 @@ namespace SpicyNvader
                 else
                     Console.ForegroundColor = ConsoleColor.White;
 
-                Console.SetCursorPosition(35, 20 + i);
+                Console.SetCursorPosition(87, 20 + i);
                 Console.Write(non[i]);
                 Console.ForegroundColor = ConsoleColor.White;
             }
@@ -241,132 +429,201 @@ namespace SpicyNvader
 
         }
 
-        public int Input(int arrowPos, int cursorPoseX, int cursorPoseY, int CursorPosYMax, int CursorPosYMin, int interval)
+
+        /// <summary>
+        /// Méthode qui ouvre le menu des options
+        /// </summary>
+        public void ShowOption()
         {
-            while(true)
+            int yCursor = 1;
+            int arrowPose = 0;
+            bool option = true;
+            while (option)
             {
-                ConsoleKeyInfo key = Console.ReadKey(true);
 
 
-                if (key.Key == ConsoleKey.DownArrow && cursorPoseY < CursorPosYMax)
-                {
-                    Console.SetCursorPosition(cursorPoseX - 3, cursorPoseY);
-                    Console.Write("       ");
-                    cursorPoseY += interval;
-                    Console.SetCursorPosition(cursorPoseX, cursorPoseY);
-                    Console.Write("<---");
-                    arrowPos++;
-                }
-                else if(key.Key == ConsoleKey.UpArrow && cursorPoseY > CursorPosYMin)
-                {
-                    Console.SetCursorPosition(cursorPoseX - 3, cursorPoseY);
-                    Console.Write("       ");
-                    cursorPoseY -= interval;
-                    Console.SetCursorPosition(cursorPoseX, cursorPoseY);
-                    Console.Write("<---");
-                    arrowPos--;
-                }
-                else if(key.Key == ConsoleKey.Enter)
-                {
-                    return arrowPos;
-                }
-
+                OptionMenuDisplay();
                 
+                for (int i = 0; i < arrow.Length; i++)
+                {
+                    Console.SetCursorPosition(114, yCursor + i);
+                    Console.Write(arrow[i]);
+                }
+
+                //Regarder quelle option a été sélectionnée
+                switch (Input(arrowPose, 114, yCursor, 27, 3, 13))
+                {
+                    case 0: // Option : Difficulté
+                        if (this.difficulty == 0)
+                            this.difficulty = 1;
+                        else
+                            this.difficulty = 0;
+                        yCursor = 1;
+                        arrowPose = 0;
+
+                        Console.Clear();
+                        break;
+                    case 1: // Option : Son
+                        if (this.sound == 0)
+                            this.sound = 1;
+                        else
+                            this.sound = 0;
+
+                        yCursor = 14;
+                        arrowPose = 1;
+
+
+                        Console.Clear();
+                        break;
+                    case 2: // Option : Retour
+                        option = false;
+                        break;
+
+
+                }
+
             }
-            
-
-        }
-        
-
-        public void StartGame()
-        {
             Console.Clear();
 
+            //Retourne au menu principal
+            MainMenu();
+        }
+
+        #endregion
+
+
+        #region Jouer
+
+        /// <summary>
+        /// Méthode pour commencer la partie
+        /// </summary>
+        public void StartGame()
+        {
+            
+            Console.Clear();
+
+            //Redimensionne la fenêtre de la console
             Console.SetWindowSize(130, 50);
             Console.BufferHeight = 50;
             Console.BufferWidth = 130;
 
             Console.CursorVisible = false;
 
+            //Instancie l'objet "Game" avec comme paramètre les options de la partie
             Game game = new Game(this.difficulty, this.sound);
             game.StartGame();
 
 
         }
 
-
-        public void ShowOption()
+        /// <summary>
+        /// Page d'affichage pour que le joueur entre son pseudo
+        /// </summary>
+        public void InsertPseudo()
         {
-            int yCursor = 3;
-            int arrowPose = 0;
-            bool option = true;
-            while (option)
+            bool checkPseudo = true;
+            string allowedCharacter = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890_";
+            string specialCharacterError = "Les caractères autre que alphabétiques, numériques ainsi que le '_' sont interdits";
+            string toMuchCharacterError = "Veuillez ne pas entrer plus de 14 caractères";
+            string notEnoughCharacterError = "Veuillez entrer au moins 2 charactères";
+            do
             {
-
                 
-                OptionMenuDisplay();
-                Console.SetCursorPosition(64, yCursor);
-                Console.Write("<---");
-                
+                Console.Clear();
 
-                switch (Input(arrowPose, 64,yCursor, 29, 3, 13))
+                Console.SetCursorPosition(50, 23);
+                Console.Write("Entrez votre pseudo : ");
+                Console.SetCursorPosition(77, 23);
+
+
+                pseudo = Console.ReadLine();
+                
+                foreach (char c in pseudo)
                 {
-                    case 0:
-                        if (this.difficulty == 0)
-                            this.difficulty = 1;
-                        else
-                            this.difficulty = 0;
-                        yCursor = 3;
-                        arrowPose = 0;
-
-                        Console.Clear();
-                        break;
-                    case 1:
-                        if (this.sound == 0)
-                            this.sound = 1;
-                        else
-                            this.sound = 0;
-
-                        yCursor = 16;
-                        arrowPose = 1;
-
-
-                        Console.Clear();
-                        break;
-                    case 2:
-                        option = false;
-                        break;
+                    if(!allowedCharacter.Contains(c.ToString()))
+                    {
+                        checkPseudo = false;
                         
 
+                        for(int i = 0; i < specialCharacterError.Length; i++)
+                        {
+                            Console.SetCursorPosition(50 + i, 27);
+                            Console.Write(specialCharacterError[i]);
+                            Thread.Sleep(20);
+                        }
+                        Thread.Sleep(2000);
+                        break;
+                    }
                 }
-                
-            }
-            Console.Clear();
-            MainMenu();
 
+                if(pseudo.Length > 14)
+                {
+                    checkPseudo = false;
+                    for (int i = 0; i < toMuchCharacterError.Length; i++)
+                    {
+                        Console.SetCursorPosition(50 + i, 27);
+                        Console.Write(toMuchCharacterError[i]);
+                        Thread.Sleep(20);
+                    }
+                    Thread.Sleep(2000);
+                }
 
+                if (pseudo.Length < 3)
+                {
+                    checkPseudo = false;
+                    for (int i = 0; i < notEnoughCharacterError.Length; i++)
+                    {
+                        Console.SetCursorPosition(50 + i, 27);
+                        Console.Write(notEnoughCharacterError[i]);
+                        Thread.Sleep(20);
+                    }
+                    Thread.Sleep(2000);
+                }
 
+            } while (!checkPseudo);
+            
+            Console.ReadLine();
 
-
-
+            StartGame();
         }
 
+        #endregion
+
+
+        #region Highscore
+        /// <summary>
+        /// Methode qui ouvre le menu "Highscore"
+        /// </summary>
         public void ShowHighScore()
         {
-
+            Console.Write("page Highscore");
         }
 
+        #endregion
+
+
+        #region About
+        /// <summary>
+        /// Méthode qui ouvre le menu "A propos"
+        /// </summary>
         public void ShowAbout()
         {
-
+            Console.Write("page A propos");
         }
 
+        #endregion
+
+
+        #region Exit
+        /// <summary>
+        /// Méthode qui quitte le jeu
+        /// </summary>
         public void ShowExit()
         {
-
+            Environment.Exit(0);
         }
 
-
+        #endregion
 
     }
 }
