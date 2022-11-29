@@ -26,15 +26,15 @@ namespace SpicyNvader
         /// <summary>
         /// Vitesse du joueur
         /// </summary>
-        private int _speed = 1;
+        private int _speed = 2;
 
         /// <summary>
         /// Constructeur par défaut
         /// </summary>
         public Player()
         {
-            this._x = 30;
-            this._y = 49;
+            this._x = 70;
+            this._y = 57;
 
         }
 

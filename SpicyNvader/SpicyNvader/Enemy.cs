@@ -12,7 +12,7 @@ namespace SpicyNvader
         /// <summary>
         /// Tableau de charactère représentant un ennemi
         /// </summary>
-        private static string[] _ennemi = new string[5]
+        private static string[] _ennemiFrame1 = new string[5]
        {
                "  ▀▄   ▄▀  ",
                " ▄█▀███▀█▄ ",
@@ -20,6 +20,15 @@ namespace SpicyNvader
                "█ █▀▀▀▀▀█ █",
                "   ▀▀ ▀▀   ",
        };
+
+        private static string[] _ennemiFrame2 = new string[5]
+      {
+               "█ ▀▄   ▄▀ █",
+               "█▄█▀███▀█▄█",
+               " ▀███████▀ ",
+               "  █▀▀▀▀▀█  ",
+               "▀▀       ▀▀",
+      };
 
         /// <summary>
         /// Tableau de charactère représentant du vide
@@ -46,7 +55,7 @@ namespace SpicyNvader
         /// <summary>
         /// Vitesse de l'ennemi
         /// </summary>
-        private int _speed = 1;
+        private int _speed = 2;
 
         /// <summary>
         /// true = est vivant / False = est mort
@@ -68,6 +77,11 @@ namespace SpicyNvader
         /// </summary>
         private int _direction;
 
+        /// <summary>
+        /// Frame actuelle du vaisseau
+        /// </summary>
+        private int _currentFrame = 1;
+
 
         /// <summary>
         /// Constructeur Custom
@@ -78,11 +92,11 @@ namespace SpicyNvader
         /// <param name="alive"></param>
         /// <param name="isShooting"></param>
         /// <param name="id"></param>
-        public Enemy(int xPose, int yPose, int speed, bool alive, bool isShooting, int id)
+        public Enemy(int xPose, int yPose, bool alive, bool isShooting, int id)
         {
             _xPose = xPose;
             _yPose = yPose;
-            _speed = speed;
+            
             _alive = alive;
             _isShooting = isShooting;
             _direction = 1;
@@ -153,6 +167,12 @@ namespace SpicyNvader
             set { _direction = value; }
         }
 
+        public int CurrentFrame
+        {
+            get { return _currentFrame; }
+            set { _currentFrame = value; }
+        }
+
 
 
         /// <summary>
@@ -163,10 +183,23 @@ namespace SpicyNvader
             // Regarde si l'ennemi est vivant
             if(_alive)
             {
-                for (int i = 0; i < _ennemi.Length; i++)
+                if(this._currentFrame == 2)
                 {
-                    Console.SetCursorPosition(_xPose, _yPose + i);
-                    Console.Write(_ennemi[i]);
+                    for (int i = 0; i < _ennemiFrame1.Length; i++)
+                    {
+                        Console.SetCursorPosition(_xPose, _yPose + i);
+                        Console.Write(_ennemiFrame1[i]);
+                    }
+                    this._currentFrame = 1;
+                }
+                else
+                {
+                    for (int i = 0; i < _ennemiFrame2.Length; i++)
+                    {
+                        Console.SetCursorPosition(_xPose, _yPose + i);
+                        Console.Write(_ennemiFrame2[i]);
+                    }
+                    this._currentFrame = 2;
                 }
             }
         }

@@ -56,6 +56,16 @@ namespace SpicyNvader
                "              ",
         };
 
+        private const int ENEMYCOUNTERMAX = 1200;
+
+        private const int BULLETCOUNTERMAX = 250;
+
+        private const int PLAYERSHOOTINGRECOILMAX = 5000;
+
+        private const int PLAYERBORDERLIMITRIGHT = 155;
+
+        private const int PLAYERBORDERLIMITLEFT = 1;
+
 
         /// <summary>
         /// constructeur par défaut
@@ -90,8 +100,9 @@ namespace SpicyNvader
             // Regarde les paramètre de la partie
             if(_difficulty == 1)
             {
-                _numberOfEnemyByRow = 6;
+                _numberOfEnemyByRow = 8;
                 _numberOfRow = 3;
+                
             }
             else
             {
@@ -140,7 +151,7 @@ namespace SpicyNvader
                 ennemiCounter++;
 
                 // Intervalle des déplacements des ennemis 
-                if (ennemiCounter == 5000)
+                if (ennemiCounter == ENEMYCOUNTERMAX)
                 {
                     // Regarde les bordures et effectue les mouvements
                     if (!squad.CheckBorder())
@@ -153,7 +164,7 @@ namespace SpicyNvader
                 }
 
                 // Intervalle des déplacement des missiles
-                if (bulletCounter == 1000)
+                if (bulletCounter == BULLETCOUNTERMAX)
                 {
                     EreaseBullet(bulletList);
                     BulletMovement(bulletList);
@@ -189,7 +200,7 @@ namespace SpicyNvader
                 {
 
                     // Regarde si le joueur se trouve au bord de la console
-                    if (player.X >= 116)
+                    if (player.X >= PLAYERBORDERLIMITRIGHT)
                     {
                         Console.SetCursorPosition(player.X, player.Y);
                     }
@@ -204,7 +215,7 @@ namespace SpicyNvader
                 else if (key.Key == ConsoleKey.LeftArrow)
                 {
                     // Regarde si le joueur se trouve au bord de la console
-                    if (player.X <= 1)
+                    if (player.X <= PLAYERBORDERLIMITLEFT)
                     {
                         Console.SetCursorPosition(player.X, player.Y);
                     }
@@ -222,7 +233,7 @@ namespace SpicyNvader
                     if(player.Recoil == 0)
                     {
                         // Instancie un nouveau "Bullet" et reset le temps de recharge
-                        player.Recoil = 10000;
+                        player.Recoil = PLAYERSHOOTINGRECOILMAX;
                         bullet.Add(new Bullet(player.X, player.Y));
                     }
                 }

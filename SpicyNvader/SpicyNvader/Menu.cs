@@ -370,7 +370,9 @@ namespace SpicyNvader
         /// </summary>
         public void OptionMenuDisplay()
         {
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine(DIFFICULTY);
+            Console.ForegroundColor = ConsoleColor.White;
 
             //Affiche le texte de la difficulté en couleur selon la difficulté (jedi : vert / padawan : rouge)
             for (int i = 0; i < jedi.Length; i++)
@@ -397,7 +399,9 @@ namespace SpicyNvader
                 Console.ForegroundColor = ConsoleColor.White;
             }
 
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine(SOUND);
+            Console.ForegroundColor = ConsoleColor.White;
 
 
             //Affiche le texte de le son en couleur selon le son (oui : vert / non : rouge)
@@ -425,7 +429,9 @@ namespace SpicyNvader
                 Console.ForegroundColor = ConsoleColor.White;
             }
 
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine(RETOUR);
+            Console.ForegroundColor = ConsoleColor.White;
 
         }
 
@@ -501,11 +507,10 @@ namespace SpicyNvader
         {
             
             Console.Clear();
+            Console.SetWindowSize(170, 60);
+            Console.BufferHeight = 60;
+            Console.BufferWidth = 170;
 
-            //Redimensionne la fenêtre de la console
-            Console.SetWindowSize(130, 50);
-            Console.BufferHeight = 50;
-            Console.BufferWidth = 130;
 
             Console.CursorVisible = false;
 
@@ -530,7 +535,7 @@ namespace SpicyNvader
             {
                 
                 Console.Clear();
-
+                checkPseudo = true;
                 Console.SetCursorPosition(50, 23);
                 Console.Write("Entrez votre pseudo : ");
                 Console.SetCursorPosition(77, 23);
@@ -567,8 +572,7 @@ namespace SpicyNvader
                     }
                     Thread.Sleep(2000);
                 }
-
-                if (pseudo.Length < 3)
+                else if (pseudo.Length < 3)
                 {
                     checkPseudo = false;
                     for (int i = 0; i < notEnoughCharacterError.Length; i++)
@@ -579,10 +583,14 @@ namespace SpicyNvader
                     }
                     Thread.Sleep(2000);
                 }
+                
+                   
+              
+
+                
 
             } while (!checkPseudo);
             
-            Console.ReadLine();
 
             StartGame();
         }

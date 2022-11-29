@@ -24,6 +24,16 @@ namespace SpicyNvader
         /// </summary>
         private List<Enemy> _enemyList = new List<Enemy>();
 
+        /// <summary>
+        /// Limite déplacement des ennemis à droite
+        /// </summary>
+        private const int BORDERLIMITRIGHT = 155;
+
+        /// <summary>
+        ///  Limite de déplacement des ennemis à gauche
+        /// </summary>
+        private const int BORDERLIMITLEFT = 4;
+
 
         /// <summary>
         /// Constructeur Custom
@@ -57,7 +67,7 @@ namespace SpicyNvader
                 for (int u = 0; u < this._numberOfEnnemiByRow; u++)
                 {
                     //ajoute à la liste les nouveaux ennemis
-                    _enemyList.Add(new Enemy(xPose: u * 13 + 5, yPose: i * 6 + 5, speed: 1, alive: true, isShooting: false, id: i * _numberOfEnnemiByRow + u)); 
+                    _enemyList.Add(new Enemy(xPose: u * 13 + 5, yPose: i * 6 + 5, alive: true, isShooting: false, id: i * _numberOfEnnemiByRow + u)); 
                 }
             }
             
@@ -88,9 +98,9 @@ namespace SpicyNvader
                     enemy.EreaseEnnemi();
 
                     if (enemy.Direction == 1)
-                        enemy.XPose += 4;
+                        enemy.XPose += enemy.Speed;
                     else
-                        enemy.XPose -= 4;
+                        enemy.XPose -= enemy.Speed;
                 }
                 
 
@@ -125,7 +135,7 @@ namespace SpicyNvader
             foreach (Enemy enemy in this._enemyList)
             {
                 // Regarde si un ennemi a un contacte avec le bord de la console et est vivant
-                if (((enemy.XPose <= 4 && enemy.Direction == 2) || (enemy.XPose >= 113 && enemy.Direction == 1)) && enemy.Alive)
+                if (((enemy.XPose <= BORDERLIMITLEFT && enemy.Direction == 2) || (enemy.XPose >= BORDERLIMITRIGHT && enemy.Direction == 1)) && enemy.Alive)
                 {
                     foreach (Enemy enemies in this._enemyList)
                     {
