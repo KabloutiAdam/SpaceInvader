@@ -21,7 +21,7 @@ namespace SpicyNvader
         /// <summary>
         /// Vitesse du missile (ligne/update)
         /// </summary>
-        private int _speed = 1;
+        private int _speed;
 
         /// <summary>
         /// Booléen de contact du missile
@@ -34,10 +34,11 @@ namespace SpicyNvader
         /// </summary>
         /// <param name="x"></param>
         /// <param name="y"></param>
-        public Bullet(int x, int y)
+        public Bullet(int x, int y, int speed)
         {
-            _x = x + 7;
-            _y = y - 4;
+            _x = x;
+            _y = y;
+            _speed = speed;
         }
 
 
@@ -58,6 +59,12 @@ namespace SpicyNvader
         {
             get { return _y; }
             set { _y = value; }
+        }
+
+        public int Speed
+        {
+            get { return _speed; }
+            set { _speed = value; }
         }
 
     }

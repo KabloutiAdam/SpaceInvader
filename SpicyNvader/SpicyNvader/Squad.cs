@@ -19,6 +19,8 @@ namespace SpicyNvader
         /// </summary>
         private int _numberOfRow;
 
+        private int _enemySpeed;
+
         /// <summary>
         /// Liste de tous les ennemis de type Enemy
         /// </summary>
@@ -40,13 +42,14 @@ namespace SpicyNvader
         /// </summary>
         /// <param name="numberOfEnemyByRow"></param>
         /// <param name="numberOfRow"></param>
-        public Squad(int numberOfEnemyByRow, int numberOfRow)
+        public Squad(int numberOfEnemyByRow, int numberOfRow, int enemySpeed)
         {
             _numberOfEnnemiByRow = numberOfEnemyByRow;
             _numberOfRow = numberOfRow;
+            _enemySpeed = enemySpeed;
         }
 
-        
+
         /// <summary>
         /// Getter Setter de la liste des ennemis
         /// </summary>
@@ -67,7 +70,7 @@ namespace SpicyNvader
                 for (int u = 0; u < this._numberOfEnnemiByRow; u++)
                 {
                     //ajoute à la liste les nouveaux ennemis
-                    _enemyList.Add(new Enemy(xPose: u * 13 + 5, yPose: i * 6 + 5, alive: true, isShooting: false, id: i * _numberOfEnnemiByRow + u)); 
+                    _enemyList.Add(new Enemy(enemySpeed: _enemySpeed,xPose: u * 13 + 5, yPose: i * 6 + 5, alive: true, isShooting: false, id: i * _numberOfEnnemiByRow + u)); 
                 }
             }
             
@@ -98,9 +101,9 @@ namespace SpicyNvader
                     enemy.EreaseEnnemi();
 
                     if (enemy.Direction == 1)
-                        enemy.XPose += enemy.Speed;
+                        enemy.XPose += enemy.EnemySpeed;
                     else
-                        enemy.XPose -= enemy.Speed;
+                        enemy.XPose -= enemy.EnemySpeed;
                 }
                 
 

@@ -374,27 +374,27 @@ namespace SpicyNvader
             Console.WriteLine(DIFFICULTY);
             Console.ForegroundColor = ConsoleColor.White;
 
-            //Affiche le texte de la difficulté en couleur selon la difficulté (jedi : vert / padawan : rouge)
+            //Affiche le texte de la difficulté en couleur selon la difficulté (padawan : vert / jedi : rouge)
             for (int i = 0; i < jedi.Length; i++)
-            {
-                if (this.difficulty == 0)
-                    Console.ForegroundColor = ConsoleColor.Green;
-                else
-                    Console.ForegroundColor = ConsoleColor.White;
-
-                Console.SetCursorPosition(45, 7 + i);
-                Console.Write(jedi[i]);
-                Console.ForegroundColor = ConsoleColor.White;
-            }
-
-            for (int i = 0; i < padawan.Length; i++)
             {
                 if (this.difficulty == 1)
                     Console.ForegroundColor = ConsoleColor.Red;
                 else
                     Console.ForegroundColor = ConsoleColor.White;
 
-                Console.SetCursorPosition(80, 7 + i);
+                Console.SetCursorPosition(95, 7 + i);
+                Console.Write(jedi[i]);
+                Console.ForegroundColor = ConsoleColor.White;
+            }
+
+            for (int i = 0; i < padawan.Length; i++)
+            {
+                if (this.difficulty == 0)
+                    Console.ForegroundColor = ConsoleColor.Green;
+                else
+                    Console.ForegroundColor = ConsoleColor.White;
+
+                Console.SetCursorPosition(40, 7 + i);
                 Console.Write(padawan[i]);
                 Console.ForegroundColor = ConsoleColor.White;
             }
@@ -403,7 +403,7 @@ namespace SpicyNvader
             Console.WriteLine(SOUND);
             Console.ForegroundColor = ConsoleColor.White;
 
-
+            
             //Affiche le texte de le son en couleur selon le son (oui : vert / non : rouge)
             for (int i = 0; i < oui.Length; i++)
             {
@@ -503,7 +503,7 @@ namespace SpicyNvader
         /// <summary>
         /// Méthode pour commencer la partie
         /// </summary>
-        public void StartGame()
+        public void StartGame(string pseudo)
         {
             
             Console.Clear();
@@ -515,7 +515,7 @@ namespace SpicyNvader
             Console.CursorVisible = false;
 
             //Instancie l'objet "Game" avec comme paramètre les options de la partie
-            Game game = new Game(this.difficulty, this.sound);
+            Game game = new Game(this.difficulty, this.sound, pseudo);
             game.StartGame();
 
 
@@ -592,7 +592,7 @@ namespace SpicyNvader
             } while (!checkPseudo);
             
 
-            StartGame();
+            StartGame(pseudo);
         }
 
         #endregion

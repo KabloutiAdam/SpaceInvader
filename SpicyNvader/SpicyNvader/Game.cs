@@ -34,6 +34,14 @@ namespace SpicyNvader
         /// Nombre de ligne d'ennemis
         /// </summary>
         private int _numberOfRow;
+
+        private int _enemySpeed;
+
+        private int _score = 0;
+
+        private string _pseudoPlayer;
+
+        private int _numberOfLives = 3;
         
 
        /// <summary>
@@ -80,10 +88,11 @@ namespace SpicyNvader
         /// </summary>
         /// <param name="difficulty"></param>
         /// <param name="sound"></param>
-        public Game(int difficulty, int sound)
+        public Game(int difficulty, int sound, string pseudo)
         {
             this._difficulty = difficulty;
-            this._sound = sound; 
+            this._sound = sound;
+            this._pseudoPlayer = pseudo;
             
         }
 
@@ -102,24 +111,45 @@ namespace SpicyNvader
             {
                 _numberOfEnemyByRow = 8;
                 _numberOfRow = 3;
-                
+                _enemySpeed = 2;
             }
             else
             {
                 _numberOfEnemyByRow = 5;
-                _numberOfRow = 2;
+                _numberOfRow = 3;
+                _enemySpeed = 1;
             }
 
             // Instancie la squad d'ennemis
-            Squad squad = new Squad(_numberOfEnemyByRow, _numberOfRow);
+            Squad squad = new Squad(_numberOfEnemyByRow, _numberOfRow, _enemySpeed);
 
             squad.CreateEnnemi();
             
             //Créé la liste de missile de type Bullet
             List<Bullet> bulletList = new List<Bullet>();
+            DisplayInformationGame(player);
 
             
             GameUpdate(player, squad, bulletList);
+        }
+
+        private void DisplayInformationGame(Player player)
+        {
+            Console.SetCursorPosition(1, 3);
+            Console.WriteLine("________________________________________________________________________________________________________________________________________________________________________");
+            Console.SetCursorPosition(5, 2);
+            Console.Write("Score : {0}", _score);
+
+            Console.SetCursorPosition(76, 2);
+            Console.Write("Joueur : {0}", _pseudoPlayer);
+
+            Console.SetCursorPosition(150, 2);
+            Console.Write("Nombre de vie : ");
+
+            for(int i = 0; i < _numberOfLives; i++)
+            {
+                Console.Write("♥");
+            }
         }
 
 
@@ -174,11 +204,50 @@ namespace SpicyNvader
                     bulletCounter = 0;
                 }
 
+                bulletList = CheckEnemyShooting(squad, bulletList);
+
                 // Regarde les collisions des missiles
-                CheckBulletColision(squad, bulletList);
+                CheckBulletColision(squad, bulletList, player);
+
+                
             }
+
+            EndGame();
         }
-        
+
+        private List<Bullet> CheckEnemyShooting(Squad squad, List<Bullet> bulletList)
+        {
+            
+
+            foreach(Enemy enemy in squad.EnemyList)
+            {
+                enemy.IsShooting = true;
+                foreach(Enemy teamMate in squad.EnemyList)
+                {
+                    if((teamMate.Id % _numberOfEnemyByRow == enemy.Id % _numberOfEnemyByRow)  && teamMate.Alive && teamMate.Id != enemy.Id && enemy.Id < teamMate.Id)
+                    {
+                        enemy.IsShooting = false;
+                        break;
+                    }
+                }
+                
+                if (enemy.ShootingCooldown == 0 && enemy.IsShooting && enemy.Alive)
+                {
+                    bulletList.Add(new Bullet(enemy.XPose + 5 , enemy.YPose + 4, -1));
+                    enemy.IsShooting = false;
+                    enemy.EnemyRecoil();
+                }
+
+                if(enemy.IsShooting)
+                {
+                    enemy.ShootingCooldown--;
+                }
+                
+            }
+
+            return bulletList;
+        }
+
         /// <summary>
         /// Méthode qui regarde les inputs du joueur
         /// </summary>
@@ -234,7 +303,7 @@ namespace SpicyNvader
                     {
                         // Instancie un nouveau "Bullet" et reset le temps de recharge
                         player.Recoil = PLAYERSHOOTINGRECOILMAX;
-                        bullet.Add(new Bullet(player.X, player.Y));
+                        bullet.Add(new Bullet(player.X + 7, player.Y - 4, 1));
                     }
                 }
             }
@@ -279,7 +348,7 @@ namespace SpicyNvader
         /// </summary>
         /// <param name="squad"></param>
         /// <param name="bulletList"></param>
-        public void CheckBulletColision(Squad squad, List<Bullet> bulletList)
+        public void CheckBulletColision(Squad squad, List<Bullet> bulletList, Player player)
         {
             // Regarde tous les ennemis ainsi que tous les missiles
             foreach (Enemy ennemi in squad.EnemyList)
@@ -288,7 +357,7 @@ namespace SpicyNvader
                 {
 
                     // Regarde si la position du missile est la même que celle d'un ennemis
-                    if (bullet.Y == ennemi.YPose + 4 && (bullet.X < ennemi.XPose + 11 && bullet.X > ennemi.XPose))
+                    if ((bullet.Y == ennemi.YPose + 4 && (bullet.X < ennemi.XPose + 11 && bullet.X > ennemi.XPose) && bullet.Speed == 1))
                     {
                         // Si l'ennemi est vivant, l'efface, le considère comme mort et détruit le missile
                         if (ennemi.Alive)
@@ -301,13 +370,38 @@ namespace SpicyNvader
                     }
 
                     // Détruit le missile s'il sort de la console
-                    if (bullet.Y == 1)
+                    if ((bullet.Y == 1 && bullet.Speed == 1) || (bullet.Y == 56 && bullet.Speed == -1))
                     {
                         Console.SetCursorPosition(bullet.X, bullet.Y);
                         Console.Write(" ");
                         RemoveBullet(bulletList, bullet);
                         break;
                     }
+
+                    
+                }
+            }
+
+            foreach (Bullet bullet in bulletList)
+            {
+                // Regarde si la position du missile est la même que celle du joueur
+                if ((bullet.Y == player.Y - 3 && (bullet.X > player.X && bullet.X < player.X + 12) && bullet.Speed == -1))
+                {
+                    _numberOfLives--;
+                    RemoveBullet(bulletList, bullet);
+                    Console.Clear();
+                    foreach(Enemy enemy in squad.EnemyList)
+                    {
+                        enemy.DisplayEnnemi();
+                    }
+                    EreaseBullet(bulletList);
+                    DisplayInformationGame(player);
+                    if (_numberOfLives == 0)
+                    {
+                        this._game = false;
+                    }
+                    Thread.Sleep(3000);
+                    break;
                 }
             }
         }
@@ -320,7 +414,7 @@ namespace SpicyNvader
         {
             foreach (Bullet bullet in bulletList)
             {
-                bullet.Y -= 1;
+                bullet.Y -= bullet.Speed;
             }
         }
 
@@ -359,6 +453,12 @@ namespace SpicyNvader
         public void RemoveBullet(List<Bullet> bulletList, Bullet bullet)
         {
             bulletList.Remove(bullet);
+        }
+
+        public void EndGame()
+        {
+            Console.Clear();
+            Console.WriteLine("Partie Fini Siuuuuuuu");
         }
     }
 }

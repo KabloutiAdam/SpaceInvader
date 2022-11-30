@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace SpicyNvader
 {
@@ -55,7 +56,7 @@ namespace SpicyNvader
         /// <summary>
         /// Vitesse de l'ennemi
         /// </summary>
-        private int _speed = 2;
+        private int _enemySpeed;
 
         /// <summary>
         /// true = est vivant / False = est mort
@@ -82,6 +83,10 @@ namespace SpicyNvader
         /// </summary>
         private int _currentFrame = 1;
 
+        private int _shootingCooldown;
+
+        private Random _rnd = new Random();
+
 
         /// <summary>
         /// Constructeur Custom
@@ -92,15 +97,17 @@ namespace SpicyNvader
         /// <param name="alive"></param>
         /// <param name="isShooting"></param>
         /// <param name="id"></param>
-        public Enemy(int xPose, int yPose, bool alive, bool isShooting, int id)
+        public Enemy(int enemySpeed, int xPose, int yPose, bool alive, bool isShooting, int id)
         {
             _xPose = xPose;
             _yPose = yPose;
-            
+            _enemySpeed = enemySpeed;
             _alive = alive;
             _isShooting = isShooting;
             _direction = 1;
             _id = id;
+            Thread.Sleep(1);
+            EnemyRecoil();
         }
 
 
@@ -126,12 +133,12 @@ namespace SpicyNvader
         /// <summary>
         /// Getter Setter de Speed
         /// </summary>
-        public int Speed
+        public int EnemySpeed
         {
-            get { return _speed; }
-            set { _speed = value; }
-        }
+            get { return _enemySpeed; }
+            set { _enemySpeed = value; }
 
+        }
         /// <summary>
         /// Getter Setter de Alive
         /// </summary>
@@ -171,6 +178,12 @@ namespace SpicyNvader
         {
             get { return _currentFrame; }
             set { _currentFrame = value; }
+        }
+
+        public int ShootingCooldown
+        {
+            get { return _shootingCooldown; }
+            set { _shootingCooldown = value; }
         }
 
 
@@ -214,6 +227,12 @@ namespace SpicyNvader
                 Console.SetCursorPosition(_xPose, _yPose + i );
                 Console.Write(_void[i]);
             }
+        }
+
+
+        public void EnemyRecoil()
+        {
+            _shootingCooldown = _rnd.Next(8000, 60000);
         }
     }
 }
