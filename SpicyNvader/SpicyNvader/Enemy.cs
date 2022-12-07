@@ -7,7 +7,7 @@ using System.Threading;
 
 namespace SpicyNvader
 {
-    internal class Enemy
+    public class Enemy
     {
 
         /// <summary>

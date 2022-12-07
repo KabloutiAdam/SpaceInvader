@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SpicyNvader
 {
-    internal class Bullet
+    public class Bullet
     {
         /// <summary>
         /// Position X du missile

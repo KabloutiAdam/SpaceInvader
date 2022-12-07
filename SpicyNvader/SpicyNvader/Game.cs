@@ -104,10 +104,15 @@ namespace SpicyNvader
         {
             // Instancie le joueur
             Player player = new Player();
+            StartOfGame(player);
+        }
+
+        public void StartOfGame(Player player)
+        {
             this._game = true;
 
             // Regarde les paramètre de la partie
-            if(_difficulty == 1)
+            if (_difficulty == 1)
             {
                 _numberOfEnemyByRow = 8;
                 _numberOfRow = 3;
@@ -119,18 +124,63 @@ namespace SpicyNvader
                 _numberOfRow = 3;
                 _enemySpeed = 1;
             }
+            List<GroupWall> groupWallList = new List<GroupWall>();
+            for(int i = 0; i < 4; i++)
+            {
+                GroupWall groupWall = new GroupWall(id: i, x: i * 5 + 3, y: 50);
+                
+                groupWallList.Add(groupWall);
+            }
+            DisplayWall(groupWallList);
+
+
+
 
             // Instancie la squad d'ennemis
             Squad squad = new Squad(_numberOfEnemyByRow, _numberOfRow, _enemySpeed);
 
             squad.CreateEnnemi();
-            
+
             //Créé la liste de missile de type Bullet
             List<Bullet> bulletList = new List<Bullet>();
             DisplayInformationGame(player);
 
-            
-            GameUpdate(player, squad, bulletList);
+
+            GameUpdate(player, squad, bulletList, groupWallList);
+        }
+
+        public void DisplayWall(List<GroupWall> groupWallList)
+        {
+            foreach (GroupWall groupWall in groupWallList)
+            {
+                foreach (Wall wall in groupWall.WallList)
+                {
+                    switch (wall.LifePoints)
+                    {
+                        case 0:
+                            wall.Symbole = " ";
+                            break;
+                        case 1:
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            break;
+                        case 2:
+                            Console.ForegroundColor = ConsoleColor.Yellow;
+                            break;
+                        case 3:
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            break;
+
+                    }
+
+
+                    Console.SetCursorPosition(wall.X, wall.Y);
+                    Console.WriteLine(wall.Symbole);
+                    Console.ForegroundColor = ConsoleColor.White;
+
+
+                }
+            }
+           
         }
 
         private void DisplayInformationGame(Player player)
@@ -158,7 +208,7 @@ namespace SpicyNvader
         /// </summary>
         /// <param name="player"></param>
         /// <param name="squad"></param>
-        public void GameUpdate(Player player, Squad squad, List<Bullet> bulletList)
+        public void GameUpdate(Player player, Squad squad, List<Bullet> bulletList, List<GroupWall> groupWallList)
         {
             
             int ennemiCounter = 0;
@@ -167,6 +217,7 @@ namespace SpicyNvader
             // Pendant que le jeu est actif
             while (this._game)
             {
+               
                 // Regarde l'input du joueur
                 bulletList = InputPlayer(player, bulletList);
 
@@ -208,11 +259,80 @@ namespace SpicyNvader
 
                 // Regarde les collisions des missiles
                 CheckBulletColision(squad, bulletList, player);
+                CheckBulletColisionWithWall(groupWallList,bulletList);
+
+                
+
+                if (CheckAllEnemiesKilled(squad))
+                {
+                    
+                    
+                    RestartRound(squad);
+                }
 
                 
             }
 
             EndGame();
+        }
+
+        private void CheckBulletColisionWithWall(List<GroupWall> groupWallList, List<Bullet> bulletList)
+        {
+            foreach (Bullet bullet in bulletList)
+            {
+                foreach (GroupWall GroupWall in groupWallList)
+                {
+                    foreach (Wall wall in GroupWall.WallList)
+                    {
+                        if (wall.X == bullet.X && wall.Y == bullet.Y)
+                        {
+                            wall.LifePoints--;
+                           
+                            DisplayWall(groupWallList);
+                            
+                        }
+                    }
+                }
+            }
+        }
+
+        private void RestartRound(Squad squad)
+        {
+            
+
+            for (int i = 0; i < this._numberOfRow; i++)
+            {
+                for (int u = 0; u < this._numberOfEnemyByRow; u++)
+                {
+                    squad.EnemyList[i* _numberOfEnemyByRow + u].Alive = true;
+                    squad.EnemyList[i * _numberOfEnemyByRow + u].XPose = u * 13 + 5;
+                    squad.EnemyList[i * _numberOfEnemyByRow + u].YPose = i * 6 + 5;
+                    squad.EnemyList[i * _numberOfEnemyByRow + u].IsShooting = false;
+                    squad.EnemyList[i * _numberOfEnemyByRow + u].Direction = 1;
+                    squad.EnemyList[i * _numberOfEnemyByRow + u].EnemyRecoil();
+                }
+            }
+        }
+
+        private bool CheckAllEnemiesKilled(Squad squad)
+        {
+            bool allKilled = false;
+            foreach(Enemy enemy in squad.EnemyList)
+            {
+                if(enemy.Alive == false)
+                {
+                    allKilled = true;
+                }
+                else
+                {
+                    allKilled = false;
+                    break;
+
+                }
+            }
+
+            return allKilled;
+
         }
 
         private List<Bullet> CheckEnemyShooting(Squad squad, List<Bullet> bulletList)
@@ -363,14 +483,18 @@ namespace SpicyNvader
                         if (ennemi.Alive)
                         {
                             ennemi.EreaseEnnemi();
+
                             ennemi.Alive = false;
                             RemoveBullet(bulletList, bullet);
+                            this._score += 100;
+                            DisplayInformationGame(player);
+
                             break;
                         }
                     }
 
                     // Détruit le missile s'il sort de la console
-                    if ((bullet.Y == 1 && bullet.Speed == 1) || (bullet.Y == 56 && bullet.Speed == -1))
+                    if ((bullet.Y == 4 && bullet.Speed == 1) || (bullet.Y == 56 && bullet.Speed == -1))
                     {
                         Console.SetCursorPosition(bullet.X, bullet.Y);
                         Console.Write(" ");

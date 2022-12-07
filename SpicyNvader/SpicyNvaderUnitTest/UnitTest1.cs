@@ -39,9 +39,22 @@ namespace SpicyNvaderUnitTest
         [TestMethod]
         public void BulletEnnemiContact()
         {
-            Bullet bullet = new Bullet();
+            bool hit = false;
 
-            Assert.IsTrue(bullet.HitCheck());
+            SpicyNvader.Bullet bullet = new SpicyNvader.Bullet(10,24,1);
+            SpicyNvader.Enemy enemy = new SpicyNvader.Enemy(-1,10,20,true,false,1);
+            if ((bullet.Y == enemy.YPose + 4 && (bullet.X < enemy.XPose + 11 && bullet.X >= enemy.XPose) && bullet.Speed == 1))
+            {
+                // Si l'ennemi est vivant, l'efface, le considère comme mort et détruit le missile
+                if (enemy.Alive)
+                {
+                    enemy.Alive = false;
+                    hit = true;
+                }
+            }
+            
+
+            Assert.IsTrue(hit);
 
         }
 
