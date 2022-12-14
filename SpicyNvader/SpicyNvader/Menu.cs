@@ -518,6 +518,9 @@ namespace SpicyNvader
             Game game = new Game(this.difficulty, this.sound, pseudo);
             game.StartGame();
 
+            Console.Clear();
+            DisplayScore(game.Score, game.PseudoPlayer);
+
 
         }
 
@@ -595,6 +598,22 @@ namespace SpicyNvader
             StartGame(pseudo);
         }
 
+
+        public void DisplayScore(int score, string pseudoPlayer)
+        {
+            Console.SetCursorPosition(70, 25);
+            Console.WriteLine("Partie terminée");
+            Console.SetCursorPosition(70, 27);
+            Console.WriteLine("Joueur : " + pseudoPlayer);
+            Console.SetCursorPosition(70, 29);
+            Console.WriteLine("Score final : {0} point(s)", score);
+            if (score > GetHighestScore())
+            {
+                Console.WriteLine("FELICITATION VOUS VENEZ DE BATTRE LE MEILLEUR SCORE");
+                System.IO.File.WriteAllText("../../../HighestScore.txt", pseudoPlayer + ";" + score);
+            }
+        }
+
         #endregion
 
 
@@ -604,7 +623,39 @@ namespace SpicyNvader
         /// </summary>
         public void ShowHighScore()
         {
-            Console.Write("page Highscore");
+            string highestScoreInfo = System.IO.File.ReadLines("../../../HighestScore.txt").First();
+            string highestScoreName = highestScoreInfo.Split(';').First();
+            string highestScoreScore = highestScoreInfo.Split(';').Last();
+
+            Console.SetCursorPosition(70, 23);
+            Console.WriteLine("Le meilleur score :");
+            Console.SetCursorPosition(70, 25);
+            Console.WriteLine("Joueur : " + highestScoreName);
+            Console.SetCursorPosition(70, 27);
+            Console.WriteLine("Score final : {0} point(s)", highestScoreScore);
+
+            Console.SetCursorPosition(1, 49);
+            Console.WriteLine("Bounton \"Escape\" pour retourner au menu principal");
+
+            while(true)
+            {
+                ConsoleKeyInfo key = Console.ReadKey(true);
+
+                if(key.Key == ConsoleKey.Escape)
+                {
+                    Console.Clear();
+                    MainMenu();
+                }
+            }
+        }
+
+        public int GetHighestScore()
+        {
+            string highestScoreInfo = System.IO.File.ReadLines("../../../HighestScore.txt").First();
+            string highestScoreName = highestScoreInfo.Split(';').First();
+            string highestScoreScore = highestScoreInfo.Split(';').Last();
+
+            return Convert.ToInt32(highestScoreScore);
         }
 
         #endregion

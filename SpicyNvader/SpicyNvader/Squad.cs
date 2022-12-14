@@ -144,7 +144,7 @@ namespace SpicyNvader
                     {
                         // Efface chaque ennemi, les descend d'une ligne puis change leur direction
                         enemies.EreaseEnnemi();
-                        enemies.YPose += 6;
+                        enemies.YPose += 3;
                         if (enemies.Direction == 1)
                         {
                             enemies.Direction = 2;

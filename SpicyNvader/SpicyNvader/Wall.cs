@@ -15,9 +15,9 @@ namespace SpicyNvader
 
         private int _y;
 
-        private int _lifePoints = 3;
+        private int _lifePoints = 6;
 
-        private string _symbole = "▀";
+        private string _symbole = "▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀";
 
         public Wall(int id, int x, int y)
         {

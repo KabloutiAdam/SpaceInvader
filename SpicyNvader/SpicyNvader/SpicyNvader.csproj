@@ -46,7 +46,6 @@
     <Compile Include="Bullet.cs" />
     <Compile Include="Enemy.cs" />
     <Compile Include="Game.cs" />
-    <Compile Include="GroupWall.cs" />
     <Compile Include="Menu.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />

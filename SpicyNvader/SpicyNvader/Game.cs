@@ -74,6 +74,21 @@ namespace SpicyNvader
 
         private const int PLAYERBORDERLIMITLEFT = 1;
 
+        
+
+        public string PseudoPlayer
+        {
+            get { return _pseudoPlayer; }
+            set { _pseudoPlayer = value; }
+        }
+
+        public int Score
+        {
+            get { return _score; }
+            set { _score = value; }
+        }
+
+
 
         /// <summary>
         /// constructeur par défaut
@@ -124,14 +139,14 @@ namespace SpicyNvader
                 _numberOfRow = 3;
                 _enemySpeed = 1;
             }
-            List<GroupWall> groupWallList = new List<GroupWall>();
-            for(int i = 0; i < 4; i++)
+            List<Wall> wallList = new List<Wall>();
+            for(int i = 0; i < 6; i++)
             {
-                GroupWall groupWall = new GroupWall(id: i, x: i * 5 + 3, y: 50);
-                
-                groupWallList.Add(groupWall);
+                Wall wall = new Wall(id: i, x: i * 25 + 10, y: 50);
+
+                wallList.Add(wall);
             }
-            DisplayWall(groupWallList);
+            DisplayWall(wallList);
 
 
 
@@ -146,39 +161,48 @@ namespace SpicyNvader
             DisplayInformationGame(player);
 
 
-            GameUpdate(player, squad, bulletList, groupWallList);
+            GameUpdate(player, squad, bulletList, wallList);
         }
 
-        public void DisplayWall(List<GroupWall> groupWallList)
+        public void DisplayWall(List<Wall> wallList)
         {
-            foreach (GroupWall groupWall in groupWallList)
+            foreach (Wall wall in wallList)
             {
-                foreach (Wall wall in groupWall.WallList)
+               
+                
+                switch (wall.LifePoints)
                 {
-                    switch (wall.LifePoints)
-                    {
-                        case 0:
-                            wall.Symbole = " ";
-                            break;
-                        case 1:
-                            Console.ForegroundColor = ConsoleColor.Red;
-                            break;
-                        case 2:
-                            Console.ForegroundColor = ConsoleColor.Yellow;
-                            break;
-                        case 3:
-                            Console.ForegroundColor = ConsoleColor.Green;
-                            break;
-
-                    }
-
-
-                    Console.SetCursorPosition(wall.X, wall.Y);
-                    Console.WriteLine(wall.Symbole);
-                    Console.ForegroundColor = ConsoleColor.White;
-
+                    case 0:
+                        wall.Symbole = "               ";
+                        break;
+                    case 1:
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        break;
+                    case 2:
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        break;
+                    case 3:
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        break;
+                    case 4:
+                        Console.ForegroundColor = ConsoleColor.DarkGreen;
+                        break;
+                    case 5:
+                        Console.ForegroundColor = ConsoleColor.Cyan;
+                        break;
+                    case 6:
+                        Console.ForegroundColor = ConsoleColor.DarkBlue;
+                        break;
 
                 }
+
+
+                Console.SetCursorPosition(wall.X, wall.Y);
+                Console.WriteLine(wall.Symbole);
+                Console.ForegroundColor = ConsoleColor.White;
+
+
+                
             }
            
         }
@@ -208,7 +232,7 @@ namespace SpicyNvader
         /// </summary>
         /// <param name="player"></param>
         /// <param name="squad"></param>
-        public void GameUpdate(Player player, Squad squad, List<Bullet> bulletList, List<GroupWall> groupWallList)
+        public void GameUpdate(Player player, Squad squad, List<Bullet> bulletList, List<Wall> wallList)
         {
             
             int ennemiCounter = 0;
@@ -258,8 +282,8 @@ namespace SpicyNvader
                 bulletList = CheckEnemyShooting(squad, bulletList);
 
                 // Regarde les collisions des missiles
-                CheckBulletColision(squad, bulletList, player);
-                CheckBulletColisionWithWall(groupWallList,bulletList);
+                CheckBulletColision(squad, bulletList, wallList, player);
+                CheckBulletColisionWithWall(wallList, bulletList);
 
                 
 
@@ -267,7 +291,12 @@ namespace SpicyNvader
                 {
                     
                     
-                    RestartRound(squad);
+                    RestartRound(squad, wallList);
+                }
+
+                if(CheckEnemiesHitPlayer(squad, player))
+                {
+                    this._game = false;
                 }
 
                 
@@ -276,27 +305,66 @@ namespace SpicyNvader
             EndGame();
         }
 
-        private void CheckBulletColisionWithWall(List<GroupWall> groupWallList, List<Bullet> bulletList)
+        private bool CheckEnemiesHitPlayer(Squad squad, Player player)
         {
+            foreach(Enemy enemy in squad.EnemyList)
+            {
+                if(enemy.YPose > 45 && enemy.Alive)
+                {
+                    return true;
+                }
+            }
+
+            
+            
+
+            return false;
+        }
+
+        private void CheckBulletColisionWithWall(List<Wall> wallList, List<Bullet> bulletList)
+        {
+            bool founded = false;
             foreach (Bullet bullet in bulletList)
             {
-                foreach (GroupWall GroupWall in groupWallList)
+                foreach (Wall wall in wallList)
                 {
-                    foreach (Wall wall in GroupWall.WallList)
+                   
+                    if((bullet.X >= wall.X && bullet.X < wall.X + 15) && wall.Y == bullet.Y && wall.LifePoints != 0)
                     {
-                        if (wall.X == bullet.X && wall.Y == bullet.Y)
+                         if(bullet.Speed < 0)
                         {
                             wall.LifePoints--;
-                           
-                            DisplayWall(groupWallList);
-                            
+                            DisplayWall(wallList);
+                            bulletList.Remove(bullet);
+                            founded = true;
+                            break;
                         }
+                        else
+                        { 
+                            DisplayWall(wallList);
+                            bulletList.Remove(bullet);
+                            founded = true;
+                            break;
+                        }
+                        
+
                     }
+                    
+
+
+
+
+                }
+                if(founded)
+                {
+                    founded = false;
+                    break; 
+
                 }
             }
         }
 
-        private void RestartRound(Squad squad)
+        private void RestartRound(Squad squad, List<Wall> wallList)
         {
             
 
@@ -468,7 +536,7 @@ namespace SpicyNvader
         /// </summary>
         /// <param name="squad"></param>
         /// <param name="bulletList"></param>
-        public void CheckBulletColision(Squad squad, List<Bullet> bulletList, Player player)
+        public void CheckBulletColision(Squad squad, List<Bullet> bulletList, List<Wall> wallList, Player player)
         {
             // Regarde tous les ennemis ainsi que tous les missiles
             foreach (Enemy ennemi in squad.EnemyList)
@@ -512,9 +580,14 @@ namespace SpicyNvader
                 if ((bullet.Y == player.Y - 3 && (bullet.X > player.X && bullet.X < player.X + 12) && bullet.Speed == -1))
                 {
                     _numberOfLives--;
-                    RemoveBullet(bulletList, bullet);
+                    for ( int i = bulletList.Count - 1; i >= 0; i--)
+                    {
+                        bulletList.Remove(bulletList[i]);
+                    }
                     Console.Clear();
-                    foreach(Enemy enemy in squad.EnemyList)
+                    DisplayWall(wallList);
+                    
+                    foreach (Enemy enemy in squad.EnemyList)
                     {
                         enemy.DisplayEnnemi();
                     }
