@@ -51,7 +51,6 @@ namespace SpicyNvader
             set { _x = value; }
         }
 
-
         /// <summary>
         /// Getter Setter du Y
         /// </summary>
@@ -61,6 +60,9 @@ namespace SpicyNvader
             set { _y = value; }
         }
 
+        /// <summary>
+        /// Getter Setter de la vitesse
+        /// </summary>
         public int Speed
         {
             get { return _speed; }

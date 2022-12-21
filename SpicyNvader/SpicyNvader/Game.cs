@@ -35,12 +35,24 @@ namespace SpicyNvader
         /// </summary>
         private int _numberOfRow;
 
+        /// <summary>
+        /// Vitesse de l'enemy
+        /// </summary>
         private int _enemySpeed;
 
+        /// <summary>
+        /// Score du jouer
+        /// </summary>
         private int _score = 0;
 
+        /// <summary>
+        /// Pseudo entré du joueur
+        /// </summary>
         private string _pseudoPlayer;
 
+        /// <summary>
+        /// Nombre de vie du joueur
+        /// </summary>
         private int _numberOfLives = 3;
         
 
@@ -64,24 +76,45 @@ namespace SpicyNvader
                "              ",
         };
 
+        /// <summary>
+        /// Const counter refresh des enemy
+        /// </summary>
         private const int ENEMYCOUNTERMAX = 1200;
 
+        /// <summary>
+        /// Const counter refresh de bullets
+        /// </summary>
         private const int BULLETCOUNTERMAX = 250;
 
+        /// <summary>
+        /// const Temps recharge de tir du joueur
+        /// </summary>
         private const int PLAYERSHOOTINGRECOILMAX = 5000;
 
+
+        /// <summary>
+        /// Limite de la console à droite
+        /// </summary>
         private const int PLAYERBORDERLIMITRIGHT = 155;
 
+        /// <summary>
+        /// Limite de la console à gauche
+        /// </summary>
         private const int PLAYERBORDERLIMITLEFT = 1;
 
         
-
+        /// <summary>
+        /// Getter Setter du pseudo du joueur
+        /// </summary>
         public string PseudoPlayer
         {
             get { return _pseudoPlayer; }
             set { _pseudoPlayer = value; }
         }
 
+        /// <summary>
+        /// Getter Setter du score
+        /// </summary>
         public int Score
         {
             get { return _score; }
@@ -122,6 +155,11 @@ namespace SpicyNvader
             StartOfGame(player);
         }
 
+
+        /// <summary>
+        /// Méthode qui initie la parite
+        /// </summary>
+        /// <param name="player"></param>
         public void StartOfGame(Player player)
         {
             this._game = true;
@@ -139,6 +177,10 @@ namespace SpicyNvader
                 _numberOfRow = 3;
                 _enemySpeed = 1;
             }
+
+
+            /* ------- Créer les murs ---------*/
+
             List<Wall> wallList = new List<Wall>();
             for(int i = 0; i < 6; i++)
             {
@@ -164,12 +206,18 @@ namespace SpicyNvader
             GameUpdate(player, squad, bulletList, wallList);
         }
 
+        /// <summary>
+        /// Affiche les murs dans la console
+        /// </summary>
+        /// <param name="wallList"> La liste des murs </param>
         public void DisplayWall(List<Wall> wallList)
         {
+
+            // Regarde tous les murs présents dans la liste
             foreach (Wall wall in wallList)
             {
                
-                
+                // Regarde selon le nombre de point de vie du mur
                 switch (wall.LifePoints)
                 {
                     case 0:
@@ -207,16 +255,25 @@ namespace SpicyNvader
            
         }
 
+        /// <summary>
+        /// Affiche les informations de la parite (point, nom du joueur, point de vie)
+        /// </summary>
+        /// <param name="player"> Le joueur</param>
         private void DisplayInformationGame(Player player)
         {
+            // Bar 
             Console.SetCursorPosition(1, 3);
             Console.WriteLine("________________________________________________________________________________________________________________________________________________________________________");
+            
+            // Score du joueur
             Console.SetCursorPosition(5, 2);
             Console.Write("Score : {0}", _score);
 
+            // Nom du joueur
             Console.SetCursorPosition(76, 2);
             Console.Write("Joueur : {0}", _pseudoPlayer);
 
+            // No,bre de vie du joueur
             Console.SetCursorPosition(150, 2);
             Console.Write("Nombre de vie : ");
 
@@ -286,7 +343,7 @@ namespace SpicyNvader
                 CheckBulletColisionWithWall(wallList, bulletList);
 
                 
-
+                // Regarde si tous les ennemis sont morts
                 if (CheckAllEnemiesKilled(squad))
                 {
                     
@@ -294,6 +351,8 @@ namespace SpicyNvader
                     RestartRound(squad, wallList);
                 }
 
+
+                // Regarde si les ennemis ont touché le joueur (trop bas)
                 if(CheckEnemiesHitPlayer(squad, player))
                 {
                     this._game = false;
@@ -302,9 +361,15 @@ namespace SpicyNvader
                 
             }
 
-            EndGame();
+                
         }
 
+        /// <summary>
+        /// Regarde si les ennemis sont descendu assez bas pour toucher le joueur
+        /// </summary>
+        /// <param name="squad"> La squad d'ennemis </param>
+        /// <param name="player">  Le joueur </param>
+        /// <returns></returns>
         private bool CheckEnemiesHitPlayer(Squad squad, Player player)
         {
             foreach(Enemy enemy in squad.EnemyList)
@@ -314,13 +379,14 @@ namespace SpicyNvader
                     return true;
                 }
             }
-
-            
-            
-
             return false;
         }
 
+        /// <summary>
+        /// Regarde si un tir a eu contact avec un mur
+        /// </summary>
+        /// <param name="wallList"> Liste des murs </param>
+        /// <param name="bulletList"> Liste des tirs</param>
         private void CheckBulletColisionWithWall(List<Wall> wallList, List<Bullet> bulletList)
         {
             bool founded = false;
@@ -328,10 +394,12 @@ namespace SpicyNvader
             {
                 foreach (Wall wall in wallList)
                 {
-                   
+                   // Regarde si un mur a eu contact avec un tir et que le mur est encore en vie
                     if((bullet.X >= wall.X && bullet.X < wall.X + 15) && wall.Y == bullet.Y && wall.LifePoints != 0)
                     {
-                         if(bullet.Speed < 0)
+
+                        // Regarde si le tir vient du joueur ou de l'ennemi
+                        if(bullet.Speed < 0)
                         {
                             wall.LifePoints--;
                             DisplayWall(wallList);
@@ -346,28 +414,25 @@ namespace SpicyNvader
                             founded = true;
                             break;
                         }
-                        
-
                     }
-                    
-
-
-
-
                 }
                 if(founded)
                 {
                     founded = false;
                     break; 
-
                 }
             }
         }
 
+        /// <summary>
+        /// Méthode pour recommencer un round
+        /// </summary>
+        /// <param name="squad"> La squad d'ennemi </param>
+        /// <param name="wallList"> La liste de mur </param>
         private void RestartRound(Squad squad, List<Wall> wallList)
         {
-            
 
+            // Recrée tous les ennemis
             for (int i = 0; i < this._numberOfRow; i++)
             {
                 for (int u = 0; u < this._numberOfEnemyByRow; u++)
@@ -381,7 +446,12 @@ namespace SpicyNvader
                 }
             }
         }
-
+        
+        /// <summary>
+        /// Regarde si tous les ennemis sont morts 
+        /// </summary>
+        /// <param name="squad"> La squad d'ennemi</param>
+        /// <returns></returns>
         private bool CheckAllEnemiesKilled(Squad squad)
         {
             bool allKilled = false;
@@ -395,14 +465,17 @@ namespace SpicyNvader
                 {
                     allKilled = false;
                     break;
-
                 }
             }
-
             return allKilled;
-
         }
 
+        /// <summary>
+        /// Regarde si l'ennemi est en capacité de tirer (uniquement ceux qui n'ont personne devant eux peuvent tirer)
+        /// </summary>
+        /// <param name="squad"> La squad d'ennemi </param>
+        /// <param name="bulletList"> La liste de bullet </param>
+        /// <returns> La liste de bullet </returns>
         private List<Bullet> CheckEnemyShooting(Squad squad, List<Bullet> bulletList)
         {
             
@@ -412,6 +485,7 @@ namespace SpicyNvader
                 enemy.IsShooting = true;
                 foreach(Enemy teamMate in squad.EnemyList)
                 {
+                    // Regarde s'il y a un autre ennemi en vie devant lui 
                     if((teamMate.Id % _numberOfEnemyByRow == enemy.Id % _numberOfEnemyByRow)  && teamMate.Alive && teamMate.Id != enemy.Id && enemy.Id < teamMate.Id)
                     {
                         enemy.IsShooting = false;
@@ -652,10 +726,6 @@ namespace SpicyNvader
             bulletList.Remove(bullet);
         }
 
-        public void EndGame()
-        {
-            Console.Clear();
-            Console.WriteLine("Partie Fini Siuuuuuuu");
-        }
+        
     }
 }

@@ -1,1 +1,10 @@
-sam;5600
+turb;11900
+rrrrrr;600
+samuelSeum;560
+paul;343
+test4;200
+asdad;0
+Adad;0
+asdasd;0
+asdad;0
+asdasd;0

@@ -174,12 +174,18 @@ namespace SpicyNvader
             set { _direction = value; }
         }
 
+        /// <summary>
+        /// Getter Setter de la frame actuelle
+        /// </summary>
         public int CurrentFrame
         {
             get { return _currentFrame; }
             set { _currentFrame = value; }
         }
 
+        /// <summary>
+        /// Getter Setter du cooldown de tir
+        /// </summary>
         public int ShootingCooldown
         {
             get { return _shootingCooldown; }
@@ -196,6 +202,8 @@ namespace SpicyNvader
             // Regarde si l'ennemi est vivant
             if(_alive)
             {
+
+                // Affiche soit la frame 1, soit la frame 2 pour faire un animation
                 if(this._currentFrame == 2)
                 {
                     for (int i = 0; i < _ennemiFrame1.Length; i++)
@@ -217,6 +225,7 @@ namespace SpicyNvader
             }
         }
 
+
         /// <summary>
         /// Méthode qui efface l'ennemi
         /// </summary>
@@ -229,7 +238,9 @@ namespace SpicyNvader
             }
         }
 
-
+        /// <summary>
+        /// Reset le cooldown de l'enemy
+        /// </summary>
         public void EnemyRecoil()
         {
             _shootingCooldown = _rnd.Next(8000, 60000);

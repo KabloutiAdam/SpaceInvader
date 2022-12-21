@@ -17,6 +17,9 @@ namespace SpicyNvader
 
         }
 
+        /// <summary>
+        /// Const texte "SPACE INVADER" en ascii font
+        /// </summary>
         private const string TITLE = @"
    ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄▄       ▄▄▄▄▄▄▄▄▄▄▄  ▄▄        ▄  ▄               ▄  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄   ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄▄ 
   ▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌     ▐░░░░░░░░░░░▌▐░░▌      ▐░▌▐░▌             ▐░▌▐░░░░░░░░░░░▌▐░░░░░░░░░░▌ ▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌
@@ -226,6 +229,11 @@ namespace SpicyNvader
         /// </summary>
         private string pseudo;
 
+        /// <summary>
+        /// List de type string qui contient le top 10 des meilleurs scores
+        /// </summary>
+        private List<string> listHighscore = new List<string>();
+
 
 
 
@@ -251,7 +259,6 @@ namespace SpicyNvader
                 case 1: // Option : Option
                     Console.Clear();
                     ShowOption();
-
                     break;
                 case 2: // Option : Highscore
                     Console.Clear();
@@ -557,9 +564,9 @@ namespace SpicyNvader
                         {
                             Console.SetCursorPosition(50 + i, 27);
                             Console.Write(specialCharacterError[i]);
-                            Thread.Sleep(20);
+                            Thread.Sleep(10);
                         }
-                        Thread.Sleep(2000);
+                        Thread.Sleep(1000);
                         break;
                     }
                 }
@@ -571,9 +578,9 @@ namespace SpicyNvader
                     {
                         Console.SetCursorPosition(50 + i, 27);
                         Console.Write(toMuchCharacterError[i]);
-                        Thread.Sleep(20);
+                        Thread.Sleep(10);
                     }
-                    Thread.Sleep(2000);
+                    Thread.Sleep(1000);
                 }
                 else if (pseudo.Length < 3)
                 {
@@ -582,9 +589,9 @@ namespace SpicyNvader
                     {
                         Console.SetCursorPosition(50 + i, 27);
                         Console.Write(notEnoughCharacterError[i]);
-                        Thread.Sleep(20);
+                        Thread.Sleep(10);
                     }
-                    Thread.Sleep(2000);
+                    Thread.Sleep(1000);
                 }
                 
                    
@@ -610,8 +617,38 @@ namespace SpicyNvader
             if (score > GetHighestScore())
             {
                 Console.WriteLine("FELICITATION VOUS VENEZ DE BATTRE LE MEILLEUR SCORE");
-                System.IO.File.WriteAllText("../../../HighestScore.txt", pseudoPlayer + ";" + score);
+                
             }
+
+            listHighscore.Clear();
+
+            foreach (string line in System.IO.File.ReadLines("../../../HighestScore.txt"))
+            {
+                listHighscore.Add(line);
+
+            }
+
+            if(listHighscore.Count < 10)
+            {
+                listHighscore.Add(pseudoPlayer + ";" + score);
+
+                
+
+
+            }
+            else if(score > Convert.ToInt32(listHighscore.Last().Split(';').Last()))
+            {
+                listHighscore[listHighscore.Count() - 1] = pseudoPlayer + ";" +score.ToString();
+            }
+
+            listHighscore.Sort(new ScoreComparer());
+
+            // Print the sorted list.
+
+            System.IO.File.WriteAllLines("../../../HighestScore.txt", listHighscore);
+            
+
+
         }
 
         #endregion
@@ -623,16 +660,26 @@ namespace SpicyNvader
         /// </summary>
         public void ShowHighScore()
         {
-            string highestScoreInfo = System.IO.File.ReadLines("../../../HighestScore.txt").First();
-            string highestScoreName = highestScoreInfo.Split(';').First();
-            string highestScoreScore = highestScoreInfo.Split(';').Last();
 
-            Console.SetCursorPosition(70, 23);
-            Console.WriteLine("Le meilleur score :");
-            Console.SetCursorPosition(70, 25);
-            Console.WriteLine("Joueur : " + highestScoreName);
-            Console.SetCursorPosition(70, 27);
-            Console.WriteLine("Score final : {0} point(s)", highestScoreScore);
+            //string highestScoreInfo = System.IO.File.ReadLines("../../../HighestScore.txt").First();
+
+
+
+
+            int yPose = 15;
+            int position = 1;
+
+            foreach (string line in System.IO.File.ReadLines("../../../HighestScore.txt"))
+            {
+                
+                string name = line.Split(';').First();
+                string score = line.Split(';').Last();
+
+                Console.SetCursorPosition(70, yPose++);
+                Console.Write(position++ + ") " + name + " " + score);
+
+                yPose++;
+            }
 
             Console.SetCursorPosition(1, 49);
             Console.WriteLine("Bounton \"Escape\" pour retourner au menu principal");
