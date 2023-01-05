@@ -727,7 +727,89 @@ namespace SpicyNvader
         /// </summary>
         public void ShowAbout()
         {
-            Console.Write("page A propos");
+            Console.Clear();
+
+            Console.SetCursorPosition(0,1);
+            Console.WriteLine("Adam Kablouti CIN2A");
+            Console.SetCursorPosition(1, 49);
+            Console.WriteLine("Bounton \"Escape\" pour retourner au menu principal");
+
+            string textAbout = "Ce Space Invader est un projet de développement dans le cadre de l'apprentissage en informatique à l'ETML. Cette réédition doit contenir la plupart des fonctionnalités de base comme : Un menu option, un menu Highscore qui affiche le nom des 10 meilleurs joueurs, cette page 'à propos' qui décrit le projet, un bouton 'Quitter', aisni que le bouton 'jouer' Pour lancer une partie";
+
+            for (int i = 0; i < 48; i++)
+            {
+                Console.SetCursorPosition(67 + i, 10);
+                Console.Write(textAbout[i]);
+                Thread.Sleep(10);
+            }
+
+            for (int i = 48; i < 97; i++)
+            {
+                Console.SetCursorPosition(67 + i - 48, 11);
+                Console.Write(textAbout[i]);
+                Thread.Sleep(10);
+            }
+
+            for (int i = 97; i < 137; i++)
+            {
+                Console.SetCursorPosition(67 + i - 97, 12);
+                Console.Write(textAbout[i]);
+                Thread.Sleep(10);
+            }
+            
+
+            for (int i = 137; i < 184; i++)
+            {
+                Console.SetCursorPosition(67 + i - 137, 13);
+                Console.Write(textAbout[i]);
+                Thread.Sleep(10);
+            }
+
+            for (int i = 184; i < 230; i++)
+            {
+                Console.SetCursorPosition(67 + i - 184, 14);
+                Console.Write(textAbout[i]);
+                Thread.Sleep(10);
+            }
+
+            for (int i = 230; i < 274; i++)
+            {
+                Console.SetCursorPosition(67 + i - 230, 15);
+                Console.Write(textAbout[i]);
+                Thread.Sleep(10);
+            }
+
+            for (int i = 274; i < 317; i++)
+            {
+                Console.SetCursorPosition(67 + i - 274, 16);
+                Console.Write(textAbout[i]);
+                Thread.Sleep(10);
+            }
+
+            for (int i = 317; i < 368; i++)
+            {
+                Console.SetCursorPosition(67 + i - 317, 17);
+                Console.Write(textAbout[i]);
+                Thread.Sleep(10);
+            }
+
+            for (int i = 368; i < 378; i++)
+            {
+                Console.SetCursorPosition(67 + i - 368, 18);
+                Console.Write(textAbout[i]);
+                Thread.Sleep(10);
+            }
+
+            ConsoleKeyInfo key;
+            do
+            {
+                key = Console.ReadKey(true);
+            } while (key.Key != ConsoleKey.Escape);
+            
+
+            
+
+            Console.Clear();
         }
 
         #endregion
