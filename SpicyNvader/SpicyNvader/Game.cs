@@ -102,6 +102,8 @@ namespace SpicyNvader
         /// </summary>
         private const int PLAYERBORDERLIMITLEFT = 1;
 
+        private string _gameOverText = "vous etes mort, dopmmage ";
+
         
         /// <summary>
         /// Getter Setter du pseudo du joueur
@@ -153,6 +155,7 @@ namespace SpicyNvader
             // Instancie le joueur
             Player player = new Player();
             StartOfGame(player);
+            EndOfGame();
         }
 
 
@@ -204,6 +207,19 @@ namespace SpicyNvader
 
 
             GameUpdate(player, squad, bulletList, wallList);
+        }
+
+
+        public void EndOfGame()
+        {
+            Console.Clear();
+
+            for (int i = 0; i < _gameOverText.Length; i++)
+            {
+                Console.SetCursorPosition(67 + i, 10);
+                Console.Write(_gameOverText[i]);
+                Thread.Sleep(10);
+            }
         }
 
         /// <summary>
@@ -376,6 +392,9 @@ namespace SpicyNvader
             {
                 if(enemy.YPose > 45 && enemy.Alive)
                 {
+
+
+                    _gameOverText = "Vous avez été envahi par les aliens !!";
                     return true;
                 }
             }
@@ -670,6 +689,7 @@ namespace SpicyNvader
                     if (_numberOfLives == 0)
                     {
                         this._game = false;
+                        _gameOverText = "Vous avez été tués par les aliens";
                     }
                     Thread.Sleep(3000);
                     break;

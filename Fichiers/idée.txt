@@ -5,3 +5,7 @@ Un timer (cf horloge 226A) durant le jeu
 Space Defender:
 ennemi = vaisseau qui tir
 defensseur = mechant de base 
+
+
+
+https://textart4u.blogspot.com/2014/04/space-invaders-copy-paste-ascii-text-art.html

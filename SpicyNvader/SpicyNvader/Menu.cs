@@ -243,36 +243,40 @@ namespace SpicyNvader
         /// </summary>
         public void MainMenu()
         {
-            MainMenuDisplay();
-
-
-            int arrowPosBase = 0;
-            int arrowPos = Input(arrowPosBase, 110, 13, 33, 13, 5);
-
-
-            // Regarde quelle sur quelle position de la flèche lors de l'entrée de la touche "Enter"
-            switch (arrowPos)
+            while (true)
             {
-                case 0: // Option : Jouer
-                    InsertPseudo();
-                    break;
-                case 1: // Option : Option
-                    Console.Clear();
-                    ShowOption();
-                    break;
-                case 2: // Option : Highscore
-                    Console.Clear();
-                    ShowHighScore();
-                    break;
-                case 3: // Option : A propos
-                    Console.Clear();
-                    ShowAbout();
-                    break;
-                case 4: // Option : Exit
-                    Console.Clear();
-                    ShowExit();
-                    break;
+                MainMenuDisplay();
+
+
+                int arrowPosBase = 0;
+                int arrowPos = Input(arrowPosBase, 110, 13, 33, 13, 5);
+
+
+                // Regarde quelle sur quelle position de la flèche lors de l'entrée de la touche "Enter"
+                switch (arrowPos)
+                {
+                    case 0: // Option : Jouer
+                        InsertPseudo();
+                        break;
+                    case 1: // Option : Option
+                        Console.Clear();
+                        ShowOption();
+                        break;
+                    case 2: // Option : Highscore
+                        Console.Clear();
+                        ShowHighScore();
+                        break;
+                    case 3: // Option : A propos
+                        Console.Clear();
+                        ShowAbout();
+                        break;
+                    case 4: // Option : Exit
+                        Console.Clear();
+                        ShowExit();
+                        break;
+                }
             }
+           
         }
 
 
@@ -525,7 +529,7 @@ namespace SpicyNvader
             Game game = new Game(this.difficulty, this.sound, pseudo);
             game.StartGame();
 
-            Console.Clear();
+            
             DisplayScore(game.Score, game.PseudoPlayer);
 
 
@@ -608,6 +612,11 @@ namespace SpicyNvader
 
         public void DisplayScore(int score, string pseudoPlayer)
         {
+
+
+
+            
+
             Console.SetCursorPosition(70, 25);
             Console.WriteLine("Partie terminée");
             Console.SetCursorPosition(70, 27);
@@ -646,8 +655,12 @@ namespace SpicyNvader
             // Print the sorted list.
 
             System.IO.File.WriteAllLines("../../../HighestScore.txt", listHighscore);
-            
 
+
+            Console.SetCursorPosition(65,35);
+            Console.WriteLine("Appuyez sur une touche pour continuer");
+            Console.ReadKey();
+            Console.Clear();
 
         }
 

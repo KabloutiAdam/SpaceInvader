@@ -1,10 +1,10 @@
 turb;11900
+turb;4900
 rrrrrr;600
 samuelSeum;560
 paul;343
 test4;200
-asdad;0
-Adad;0
-asdasd;0
-asdad;0
-asdasd;0
+aasdf;200
+asdfasd;100
+Turb;100
+asddf;100
