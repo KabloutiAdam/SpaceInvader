@@ -300,6 +300,8 @@ namespace SpicyNvader
                 Console.SetCursorPosition(CursorPosX, CursorPosY + i);
                 Console.Write(arrow[i]);
             }
+            Console.SetCursorPosition(1, 48);
+            Console.WriteLine("Version 1.0");
         }
 
         /// <summary>
